@@ -1,0 +1,21 @@
+{
+  "name": "bubblemap-backend",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch indes.ts",
+    "start": "bun index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "elysia": "^1.0.22",
+    "prisma": "^5.14.0",
+    "zod": "^3.23.8"
+  }
+}
