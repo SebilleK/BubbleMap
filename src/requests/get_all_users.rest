@@ -1,4 +1,4 @@
-GET http://localhost:57307/users
+GET http://localhost:3003/users
 Content-Type: application/json
 
 {

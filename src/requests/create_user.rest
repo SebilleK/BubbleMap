@@ -1,4 +1,4 @@
-POST http://localhost:<port_of_database>/signup
+POST http://localhost:3003/signup
 Content-Type: application/json
 
 {

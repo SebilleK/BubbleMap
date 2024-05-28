@@ -15,37 +15,6 @@ bun i
 bun pm trust --all
 ```
 
-## Quickstart Setup (TEMPORARY)
-
-1.
-
-```bash
-docker-compose build
-docker-compose up
-```
-
-2.
-
-- Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". Docker will use the latter one, while deploying the database with Prisma uses the first one. (Temporary fix)
-
-3.
-
-- Open a new CLI and run:
-
-```bash
-bunx prisma db push
-```
-
-- Open http://localhost:3003/users
-
-______
-
-To install dependencies:
-
-```bash
-bun install
-```
-
 To run:
 
 ```bash
@@ -54,7 +23,38 @@ bun run dev
 bun start
 ```
 
-(no migrations are currently set)
+This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+
+## Quickstart Setup with Docker (TEMPORARY)
+
+To start, clone this repo:
+
+```bash
+git clone https://github.com/SebilleK/BubbleMap.git
+```
+
+and make sure to have a valid .env file. For a better look at its specifications please refer to **src/env/index.ts.**.
+
+1. Docker | Build images and start the containers:
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+2. Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Temporary fix)
+
+3. Prisma | Open a new CLI and run:
+
+```bash
+bunx prisma db push
+```
+
+4. Open http://localhost:3003/users
+
+You should now be able to make requests. Try creating a new user! **(see src/requests)**.
+
+---
 
 ## Dockerization
 
@@ -74,8 +74,6 @@ Additionally, if you get an error **"port is already allocated"** even though yo
       - 3000
 ```
 
-This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-
 **important note on Docker + Bun + Prisma**
 
 - Using Prisma in Docker has known issues if you choose to use Bun. This is especially true in Windows. They appear to be fixed as of this project's used bun release, but if you still have trouble with it there are fixes for this. One of these workarounds is to include NodeJS in the generated Docker images. Even though it defeats the purpose of using Bun as a replacement for NodeJS, it still DOES solve the problem.
@@ -89,13 +87,13 @@ This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) i
 
 ## Database
 
-Generate the Prisma Client (Caution: running this in Docker is not supported by earlier versions of Bun!):
+Generate the Prisma Client **(Caution: running this in Docker is not supported by earlier versions of Bun!)**:
 
 ```bash
 bunx prisma generate
 ```
 
-For initial database deployment (Please refer to the steps in the Quickstart section for this command to work if you're using Docker):
+For initial database deployment (Please refer to the steps in the **Quickstart section** for this command to work **if you're using Docker**):
 
 ```bash
 bunx prisma db push
@@ -130,3 +128,4 @@ TBA
 - zod
 - dotenv
 - jsonwebtoken
+- bcrypt
