@@ -1,6 +1,12 @@
 import Elysia from 'elysia';
-//! import routes here
 
-const app = new Elysia().get('/', () => '✨ Hello Elysia! Server is up and running ✨');
+//! import routes
+import { userController } from './routes/users';
+
+const app = new Elysia();
+
+//? register routes
+userController(app);
+
 
 export { app };

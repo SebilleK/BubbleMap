@@ -1,40 +1,32 @@
 # Dockerfile
 
-# use the official Bun image
-# see all versions at <https://hub.docker.com/r/oven/bun/tags>
-FROM oven/bun:1 as base
-WORKDIR /app
+# Use the official Bun image
+FROM oven/bun:1
 
-# install dependencies into temp folder
-# this will cache them and speed up future builds
-FROM base AS install
-RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+# Working dir
+WORKDIR /BubbleMap
 
-# install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
+# DOCKER PRISMA FIX WITH BUN
+# Copy Node.js from the Node.js image
+# COPY --from=node:18 /usr/local/bin/node /usr/local/bin/node
+#! Please read the README.md file on "Dockerization"...
 
-# copy node_modules from temp folder
-# then copy all (non-ignored) project files into the image
-FROM install AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies #! --frozen-lockfile
+RUN bun install 
+
+# Copy the rest of the application + Prisma config files
 COPY . .
+COPY prisma ./prisma
 
-# [optional] tests & build
-# ENV NODE_ENV=production
-# RUN bun test
-# RUN bun run build
+# Generate prisma client
+RUN bunx prisma generate
 
-# copy production dependencies and source code into final image
-# FROM base AS release
-# COPY --from=install /temp/prod/node_modules node_modules
-# COPY --from=prerelease /usr/src/app/index.ts .
-# COPY --from=prerelease /usr/src/app/package.json .
+# Create prisma database
+# RUN bunx prisma db push 
+#! Please refer to README.md on "Quickstart"...
 
 # run the app
-USER bun
-EXPOSE 3000/tcp
 CMD ["bun", "run", "dev"]

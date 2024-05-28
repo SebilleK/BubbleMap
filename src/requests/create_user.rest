@@ -1,0 +1,8 @@
+POST http://localhost:<port_of_database>/signup
+Content-Type: application/json
+
+{
+    "username": "testUser",
+    "email": "test@mail.com",
+    "password": "testPassword"
+}

@@ -1,0 +1,6 @@
+GET http://localhost:57307/users
+Content-Type: application/json
+
+{
+   
+}

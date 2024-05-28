@@ -2,6 +2,7 @@ import { app } from './app';
 import { env } from './env';
 
 app
+	.get('/ping', () => 'pong')
 	.listen({ port: env.API_PORT }, () => {
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`);
 	})
