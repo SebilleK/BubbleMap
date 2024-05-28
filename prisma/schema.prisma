@@ -1,14 +1,59 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  email      String   @unique
+  password   String
+  admin      Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+  Review     Review[]
+}
+
+model Store {
+  id         Int       @id @default(autoincrement())
+  name       String?
+  description String?
+  photo      Json?
+  address    String?   @map("adress")
+  latitude   Float?
+  longitude  Float?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  Review     Review[]
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  storeId    Int      @map("store_id")
+  rating     Int
+  reviewText String   @map("review_text")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id])
+  store      Store    @relation(fields: [storeId], references: [id])
+  ReviewFilter ReviewFilter[]
+}
+
+model ReviewFilter {
+  id        Int     @id @default(autoincrement())
+  reviewId  Int     @map("review_id")
+  filterId  Int     @map("filter_id")
+  review    Review  @relation(fields: [reviewId], references: [id])
+  filter    Filter  @relation(fields: [filterId], references: [id])
+}
+
+model Filter {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  ReviewFilter ReviewFilter[]
 }

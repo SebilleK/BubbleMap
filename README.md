@@ -4,6 +4,10 @@
 
 A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited, see others' reviews, and save their favorite shops.
 
+## Info/Disclaimer
+
+This project is in active development and everything described here is subject to change. This presently exists as a personal reference and is not final documentation.
+
 To install dependencies:
 
 ```bash
@@ -13,14 +17,48 @@ bun install
 To run:
 
 ```bash
-bun run index.ts
+bun run dev
+# or
+bun start
+```
+
+To push schema to database:
+
+```bash
+npx prisma db push
+```
+
+(no migrations are currently set)
+
+## Dockerization
+
+- With docker compose (build the docker image and start the container):
+**Check docker-compose.yml and make sure your .env is correctly set. Specifications on src/env/index.ts.**
+```bash
+docker-compose up -d
+```
+
+- Manually:
+
+1. Create docker image
+
+```bash
+docker build -t bubblemap .
+```
+
+2. Run the container
+**Please set the correct environment variables as shown below when running the image. Specifications on src/env/index.ts.**
+
+```bash
+docker run -d -p 3000:3000 \
+    -e DB_NAME=<something> \
+    -e DB_PASS=<something> \
+    (...)
+    -e API_PORT=3000 \
+    bubblemap
 ```
 
 This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-
-## Info/Disclaimer
-
-This project is in active development and everything here is subject to change.
 
 ## Database
 
