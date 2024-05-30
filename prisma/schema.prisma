@@ -12,33 +12,34 @@ datasource db {
 
 model User {
   id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
   username   String   @unique
   email      String   @unique
   password   String
+  favoriteStores Json?
   admin      Boolean  @default(false)
-  createdAt  DateTime @default(now()) @map("created_at")
   Review     Review[]
 }
 
 model Store {
   id         Int       @id @default(autoincrement())
-  name       String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  name       String
   description String?
   photo      Json?
   address    String?   @map("adress")
-  latitude   Float?
-  longitude  Float?
-  createdAt  DateTime  @default(now()) @map("created_at")
+  latitude   Float
+  longitude  Float
   Review     Review[]
 }
 
 model Review {
   id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
   userId     Int      @map("user_id")
   storeId    Int      @map("store_id")
   rating     Int
   reviewText String   @map("review_text")
-  createdAt  DateTime @default(now()) @map("created_at")
   user       User     @relation(fields: [userId], references: [id])
   store      Store    @relation(fields: [storeId], references: [id])
   ReviewFilter ReviewFilter[]

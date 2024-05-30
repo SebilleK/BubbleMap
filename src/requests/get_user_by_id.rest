@@ -1,0 +1,6 @@
+GET http://localhost:<API_PORT>/api/users/:id
+Content-Type: application/json
+
+{
+   
+}

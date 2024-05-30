@@ -8,6 +8,7 @@ CREATE TABLE `users` (
   `username` varchar(50) UNIQUE NOT NULL,
   `email` varchar(100) UNIQUE NOT NULL,
   `password` varchar(255) NOT NULL,
+  `favorite_stores` json,
   `admin` boolean DEFAULT false,
   `created_at` timestamp DEFAULT (current_timestamp())
 );

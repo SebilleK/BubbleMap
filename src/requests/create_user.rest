@@ -1,4 +1,4 @@
-POST http://localhost:3003/signup
+POST http://localhost:<API_PORT>/api/users/register
 Content-Type: application/json
 
 {

@@ -1,0 +1,6 @@
+PUT http://localhost:<API_PORT>api/users/:id
+Content-Type: application/json
+
+{
+    "username": "Himekawa Ayumi"
+}

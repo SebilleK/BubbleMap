@@ -1,4 +1,4 @@
-GET http://localhost:3003/users
+GET http://localhost:<API_PORT>/api/users
 Content-Type: application/json
 
 {
