@@ -62,6 +62,10 @@ bunx prisma db push
 
 You should now be able to make requests. Try creating a new user! **(see src/requests)**.
 
+[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+
+Open http://localhost:{API_PORT}/swagger to see API documentation.
+
 ## Local Setup for Development WITHOUT Docker (EXAMPLE)
 
 1. Database setup
@@ -81,7 +85,6 @@ bun i
 bun pm trust --all # if needed, trust all the dependencies to install them
 ```
 
-Make sure you trust all of them to finish this process if need be.
 Check again your .env file is correct, the host should be: **DB_HOST=127.0.0.1**.
 
 Next we should generate the prisma client and deploy our schema:
@@ -92,17 +95,22 @@ bunx prisma db push # Deploy our database schema to create the database #!!ALTER
 ```
 
 You can see the schema we're pushing to create our "bubblemap" database on **prisma/schema.prisma**
+
 Refresh your VSCode extension if you're using it, so you can see the database was just created.
 
 Then, start up the app in development (with --watch) or normal mode:
 
 ```bash
-bun dev # server restarts on code changes
+bun run dev # server restarts on code changes
 # OR
 bun start
 ```
 
-Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user! Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
+Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user!
+
+[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
+
 Open http://localhost:{API_PORT}/swagger to see API documentation.
 
 ---
@@ -125,27 +133,38 @@ Additionally, if you get an error **"port is already allocated"** even though yo
       - 3000
 ```
 
-Removing the containers on Docker Desktop by deleting them directly can cause issues. Try to stop and remove them always with the following command:
+Removing the containers on Docker Desktop by deleting them directly can cause issues. Try to stop and remove them always with the following command for "graceful" cleanup:
 
 ```bash
-docker-compose down # stop containers and remove them + their networks and volumes | "graceful"/proper cleanup
+docker-compose down # stop containers and remove them + their networks and volumes
 ```
 
 **Important note on Docker + Bun + Prisma**
 
-- Using Prisma in Docker has known issues if you choose to use Bun. This is especially true in Windows. They appear to be fixed as of this project's used bun release, but if you still have trouble with it there are fixes for this. One of these workarounds is to include NodeJS in the generated Docker images. Even though it defeats the purpose of using Bun as a replacement for NodeJS, it still DOES solve the problem.
+- Using Prisma in Docker has known issues if you choose to use Bun. This is especially true in Windows. They appear to be fixed as of this project's used bun release, but if you still have trouble with it there are fixes for this.
 
-- The Dockerfile includes a comment for the mentioned fix. Source: https://github.com/oven-sh/bun/issues/5320#issuecomment-1730927088
+- One of these workarounds is to include NodeJS in the generated Docker images. Even though it defeats the purpose of using Bun as a replacement for NodeJS, it still DOES solve the problem.
 
-- Please check these threads for more information on this issue and fixes:
-  https://github.com/prisma/prisma/issues/21241 | Bun: Can't prisma generate on Docker
-  https://github.com/oven-sh/bun/issues/5320 | Bun doesn't run prisma generate or prisma migrate inside docker
-  https://stackoverflow.com/questions/67746885/prisma-client-did-not-initialize-yet-please-run-prisma-generate-and-try-to-i |@prisma/client did not initialize yet
+- The Dockerfile includes a comment for the mentioned fix.
+  Source: https://github.com/oven-sh/bun/issues/5320#issuecomment-1730927088
+
+- Please check these threads as well for more information on this issue and possible fixes:
+
+  "Bun: Can't prisma generate on Docker"
+  https://github.com/prisma/prisma/issues/21241
+
+  "Bun doesn't run prisma generate or prisma migrate inside docker"
+  https://github.com/oven-sh/bun/issues/5320
+
+  "@prisma/client did not initialize yet. Please run "prisma generate" and try to import it again"
+  https://stackoverflow.com/questions/67746885/
+
+  A short narrative blog post on a Prisma + Docker conflict of its author
   https://medium.com/@simmonsfrank/beautiful-elysia-imprismad-in-a-jail-6518dd2af586
 
 ## Database
 
-This project uses Prisma for database queries. It uses its own schema definition language to define database relationships, so it's important that is set up adequately first. **(See prisma/schema.prisma)**.
+This project uses Prisma for database queries. It uses its own schema definition language to define database relationships, so it's important that that is set up adequately first. **(See prisma/schema.prisma)**.
 
 If needed, equivalent MySQL syntax is provided in **src/database/mysql.sql** to create the "bubblemap" database with the intended schema.
 
@@ -170,6 +189,7 @@ bunx prisma db push
 - I used this platform to design the database schema [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
 
 ![Database Schema](images/databaseschema.svg)
+**(SCHEMA NOT UP TO DATE.)**
 
 ### Why MySQL and not other database management system?
 
@@ -190,14 +210,119 @@ This project uses ElysiaJS. It's a web framework similar to Express but focused 
 
 Elysia Docs
 https://elysiajs.com/integrations/cheat-sheet.html
+
 https://elysiajs.com/essential/context
+
 https://elysiajs.com/essential/life-cycle.html
 
 For a good example on how to build a simple REST API with Bun, Elysia and Prisma, check here:
 https://blog.thecodebrew.tech/create-bun-rest-api-with-elysia-and-prisma/
 I based my **src/routes** organization on it.
 
-### API docs
+## Error Handling
+
+I used Elysia's native error handling for all errors. Elysia supports these:
+
+```bash
+NOT_FOUND
+INTERNAL_SERVER_ERROR
+VALIDATION
+PARSE
+UNKNOWN
+```
+
+When throwing validation errors Elysia expects 3 arguments, the second one being a schema that represents the validation rules being applied in that case. Those are very simple for this project and defined here in **src/utils/errors/validationSchemas.ts** using [sinclair/typebox](https://github.com/sinclairzx81/typebox).
+
+For more information on how Elysia handles errors check out:
+https://elysiajs.com/life-cycle/on-error
+
+**(TO BE CONTINUED...)**
+
+## Authentication
+
+I implemented simple JWT-based authentication for 2 levels: user and admin. For having user privileges you need to be logged in, and for having admin privileges you need to be an admin.
+
+I used the jsonwebtoken library to generate, verify and decode JWT.
+**src/utils/auth/authJWT.ts**
+
+In the login route handler I generate a JWT for the user and store that into a cookie:
+**src/routes/users/handlers.ts**
+
+```bash
+# (...)
+# GENERATING JWT TOKEN
+
+const accessToken = await generateToken(user);
+
+if (!accessToken) {
+	throw new InternalServerError('An access token could not be generated.');
+}
+
+# SETTING AUTH COOKIES
+cookieAuth.value = {
+	accessToken: accessToken,
+};
+
+return {
+user,
+accessToken: accessToken,
+};
+# (...)
+```
+
+I use Elysia's cookie object. I named it cookieAuth.
+This cookie contains info on the user id and if the user is an admin or not (boolean value), as defined in the generate token function mentioned above (in **authJWT.ts**).
+
+All the protected routes that require user authentication (or admin privileges) read this value.
+
+**src/routes/users/index.ts**
+
+```bash
+# (...)
+// login a user
+	.post('/login', async ({ body, cookie: { cookieAuth } }) => await loginUser(body, cookieAuth), {
+		body: t.Object({
+			email: t.String(),
+			password: t.String(),
+		}),
+	});
+# (...)
+```
+
+Cookie definition (you can extract the cookie property value, as shown above, whenever you need it in the routes):
+**src/app.ts**
+
+```bash
+import cookie from '@elysiajs/cookie';
+# (...)
+const app = new Elysia();
+
+app
+	# (...)
+	.use(cookie({ secure: true, httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 24 }))
+	# (...)
+
+```
+
+I grouped all routes by type (users, stores) inside the routes folder, and within each index file (for each type) you can find them further divided by privileges needed to access them (none, being logged in, being an admin). These are then exported to the main **app.ts** file. Each privilege group uses Elysia's guard to apply the necessary auth verification to all this group's routes.
+
+Relevant Docs:
+
+https://elysiajs.com/patterns/cookie.html#set
+
+https://elysiajs.com/essential/scope.html#guard
+
+https://elysiajs.com/life-cycle/before-handle.html#before-handle
+
+I would like to further mention these resources:
+
+Where I took the idea to group the routes with guard and beforeHandle
+https://www.youtube.com/watch?v=-G7Dzbpd1B4 _(in Brazilian Portuguese)_
+
+Very good answer to understand the concept of JWT
+https://stackoverflow.com/a/62095037
+
+## API docs
 
 The Elysia Swagger plugin is used to generate a Swagger page of documentation for this API.
 When running, check http://localhost:{API_PORT}/swagger
@@ -213,3 +338,5 @@ TBA
 - zod
 - dotenv
 - bcrypt
+- sinclair/typebox
+- jsonwebtoken

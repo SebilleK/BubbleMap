@@ -1,8 +1,8 @@
-POST http://localhost:<API_PORT>/api/users/register
+POST http://localhost:3003/<API_PORT>/users/register
 Content-Type: application/json
 
 {
-    "username": "testUser",
-    "email": "test@mail.com",
-    "password": "testPassword"
+    "username": "Edelgard",
+    "email": "ed@mail.com",
+    "password": "BlackEagl3sF1rce"
 }

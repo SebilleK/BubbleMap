@@ -2,10 +2,13 @@ import Elysia from 'elysia';
 import { env } from './env';
 
 //! import routes
-import usersRoutes from './routes/users';
+import { usersRoutes, protectedUsersRoutes, adminProtectedUsersRoutes } from './routes/users';
 
 //? swagger plugin for documentation
 import swagger from '@elysiajs/swagger';
+
+//? cookies elysia
+import cookie from '@elysiajs/cookie';
 
 const app = new Elysia();
 
@@ -20,11 +23,42 @@ app
 				},
 			},
 		}),
-)
-	.group('/api', app => app.use(usersRoutes))
+	)
+	.use(cookie({ secure: true, httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 24 }))
+	.group('/api', app => app.use(usersRoutes).use(protectedUsersRoutes).use(adminProtectedUsersRoutes))
 	.listen({ port: env.API_PORT }, () => {
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
-	})
-	.onError(({ error }) => {
-		console.error('❌ There was an error trying to start the server:', error);
 	});
+
+//! NOTES
+/* FOR CUSTOM ERRORS & customization: SEE ELYSIA ERROR CODES
+	!!Needed handler for custom errors
+	.error({
+	
+		BadRequestError,
+		SuperCoolError, 
+		
+	}) 
+	 !!These are the error codes that elysia provides.
+		.onError(({ error, code, set }) => {
+		switch (code) {
+			case 'NOT_FOUND':
+				set.status = 404;
+				return 'The requested resource was not found.' + error.message;
+			case 'INTERNAL_SERVER_ERROR':
+				set.status = 500;
+				return 'An internal server error occurred. Please try again later?' + error.message;
+			case 'VALIDATION':
+				set.status = 400;
+				return 'The request body is invalid. Please verify all fields and try again.' + error.message;
+			case 'PARSE':
+				set.status = 400;
+				return 'The request body is invalid. Please verify all fields and try again.' + error.message;
+			case 'UNKNOWN':
+				set.status = 500;
+				return 'An unknown error occurred. Please try again later?' + error.message;
+			default:
+				set.status = 500;
+				return 'An unknown error occurred. Please try again later?' + error.message;
+		}
+	}) */

@@ -25,9 +25,8 @@ const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
 	console.error('❌ The required environment variables were not provided or were invalid \n ⚠️ Please check the .env file on the root directory and make sure it matches the schema');
-	if (_env.success === false) {
-		console.error('❌ Invalid environment variables:\n', _env.error.format());
-	}
+	console.error('❌ Invalid environment variables:\n', _env.error.format());
+
 	throw new Error('Invalid environment variables');
 }
 
