@@ -3,8 +3,8 @@ import { Elysia, t } from 'elysia';
 //? import handlers for routes
 import { getUsers, getUserbyId, createUser, loginUser, updateUser, deleteUser } from './handlers';
 
-//? JWT helpers
-import { verifyToken, decodeToken } from '../../utils/auth/authJWT';
+//? Permission helpers
+import { confirmLogin, confirmAdmin } from '../../utils/auth/authVerify';
 
 //? all users can access this
 const usersRoutes = new Elysia({ prefix: '/users' })
@@ -31,12 +31,7 @@ const protectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
 			//! AUTH Logic: check if token is valid (user logged in)
 			// console.log(cookieAuth);
 
-			const token = cookieAuth.value.accessToken.jwtToken;
-			// console.log(token);
-
-			const verifiedToken = await verifyToken(token);
-
-			if (!verifiedToken) {
+			if ((await confirmLogin(set, cookieAuth)) === false) {
 				return (set.status = 'Unauthorized');
 			}
 		},
@@ -53,7 +48,7 @@ const protectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
 					}),
 				})
 				// update user by id
-				.put('/:id', ({ params: { id }, body, cookie: { cookieAuth } }) => updateUser(id, body, cookieAuth), {
+				.put('/:id', ({ params: { id }, body, cookie: { cookieAuth }, set }) => updateUser(id, body, cookieAuth, set), {
 					params: t.Object({
 						id: t.String(),
 					}),
@@ -95,21 +90,7 @@ const adminProtectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
 			//! AUTH Logic: check if token is valid and user is admin
 			// console.log(cookieAuth);
 
-			const token = cookieAuth.value.accessToken.jwtToken;
-			const verifiedToken = await verifyToken(token);
-			if (!verifiedToken) {
-				return (set.status = 'Unauthorized');
-			}
-
-			// the decoded token is a string...
-			const decodedTokenString = decodeToken(token);
-			// console.log('Decoded token:', decodedTokenString);
-
-			// first we parse it to an object
-			const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
-
-			// check if it has the admin property
-			if (!decodedToken || typeof decodedToken.admin !== 'boolean' || !decodedToken.admin) {
+			if ((await confirmAdmin(set, cookieAuth)) === false) {
 				return (set.status = 'Unauthorized');
 			}
 		},

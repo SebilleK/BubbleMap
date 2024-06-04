@@ -10,8 +10,6 @@ export async function hashValue(value: string): Promise<string> {
 	}
 }
 
-
-
 /* // Example usage:
 hashValue('yourValueToHash')
 	.then(hash => console.log(`Hashed value: ${hash}`))

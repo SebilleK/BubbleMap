@@ -238,9 +238,11 @@ https://elysiajs.com/life-cycle/on-error
 
 **(TO BE CONTINUED...)**
 
-## Authentication
+## Authentication + Cookies
 
 I implemented simple JWT-based authentication for 2 levels: user and admin. For having user privileges you need to be logged in, and for having admin privileges you need to be an admin.
+
+### Generating JWT
 
 I used the jsonwebtoken library to generate, verify and decode JWT.
 **src/utils/auth/authJWT.ts**
@@ -270,7 +272,10 @@ accessToken: accessToken,
 # (...)
 ```
 
+### Cookies
+
 I use Elysia's cookie object. I named it cookieAuth.
+
 This cookie contains info on the user id and if the user is an admin or not (boolean value), as defined in the generate token function mentioned above (in **authJWT.ts**).
 
 All the protected routes that require user authentication (or admin privileges) read this value.
@@ -304,9 +309,15 @@ app
 
 ```
 
-I grouped all routes by type (users, stores) inside the routes folder, and within each index file (for each type) you can find them further divided by privileges needed to access them (none, being logged in, being an admin). These are then exported to the main **app.ts** file. Each privilege group uses Elysia's guard to apply the necessary auth verification to all this group's routes.
+### More info
 
-Relevant Docs:
+I grouped all routes by type (users, stores, reviews) inside the routes folder, and within each index file (for each type) you can find them further divided by privileges needed to access them (none, being logged in, being an admin).
+
+These routes are exported to the main **app.ts** file. Each privilege group uses Elysia's guard and beforeHandle to apply the necessary auth verification to all this group's routes.
+
+Some helper functions to verify if an user is logged in or is an admin for this purpose (and to declutter the beforeHandle in the indexes too) can be found in **src/utils/auth/authVerify.ts**.
+
+**Relevant Docs:**
 
 https://elysiajs.com/patterns/cookie.html#set
 
@@ -321,6 +332,17 @@ https://www.youtube.com/watch?v=-G7Dzbpd1B4 _(in Brazilian Portuguese)_
 
 Very good answer to understand the concept of JWT
 https://stackoverflow.com/a/62095037
+
+**Notes:**
+
+- The decodeToken function in **authJWT** returns a string, so whenever accessing the values in cookieAuth we need
+  first to convert them.
+
+```bash
+# example present in the access of admin only routes
+const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
+const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
+```
 
 ## API docs
 

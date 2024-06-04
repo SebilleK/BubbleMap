@@ -1,0 +1,6 @@
+GET http://localhost:<API_PORT>/api/stores
+Content-Type: application/json
+
+{
+   
+}

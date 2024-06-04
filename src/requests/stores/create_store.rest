@@ -1,0 +1,10 @@
+GET http://localhost:<API_PORT>/api/stores/create
+Content-Type: application/json
+
+{
+   "name": "", 
+  "description": "",
+  "address": "",
+  "latitude": 1,
+  "longitude": 1
+}

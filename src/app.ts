@@ -3,6 +3,8 @@ import { env } from './env';
 
 //! import routes
 import { usersRoutes, protectedUsersRoutes, adminProtectedUsersRoutes } from './routes/users';
+import { storesRoutes, protectedStoresRoutes, adminProtectedStoresRoutes } from './routes/stores';
+import { reviewsRoutes, protectedReviewsRoutes, adminProtectedReviewsRoutes } from './routes/reviews';
 
 //? swagger plugin for documentation
 import swagger from '@elysiajs/swagger';
@@ -25,7 +27,18 @@ app
 		}),
 	)
 	.use(cookie({ secure: true, httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 24 }))
-	.group('/api', app => app.use(usersRoutes).use(protectedUsersRoutes).use(adminProtectedUsersRoutes))
+	.group('/api', app =>
+		app
+			.use(usersRoutes)
+			.use(protectedUsersRoutes)
+			.use(adminProtectedUsersRoutes)
+			.use(storesRoutes)
+			.use(protectedStoresRoutes)
+			.use(adminProtectedStoresRoutes)
+			.use(reviewsRoutes)
+			.use(protectedReviewsRoutes)
+			.use(adminProtectedReviewsRoutes),
+	)
 	.listen({ port: env.API_PORT }, () => {
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
 	});

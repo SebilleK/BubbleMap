@@ -1,4 +1,4 @@
-//? JWT
+//? JWT AUTHENTICATION
 import { env } from '../../env';
 import jwt from 'jsonwebtoken';
 import prisma from '../../../prisma/prisma';

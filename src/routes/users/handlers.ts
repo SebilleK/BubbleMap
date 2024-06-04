@@ -6,41 +6,11 @@ import { hashValue, compareValue } from '../../utils/hashUtil';
 import { typeCheckerPassword, typeCheckerEmail } from '../../utils/errors/validationSchemas';
 
 //? JWT helpers
-import { generateToken } from '../../utils/auth/authJWT';
+import { generateToken, decodeToken } from '../../utils/auth/authJWT';
 
-export async function getUsers() {
-	try {
-		return await prisma.user.findMany({ orderBy: { id: 'asc' } });
-	} catch (error) {
-		// console.error(`Error while fetching users: `, error);
-		throw new InternalServerError('Error while fetching users');
-	}
-}
-
-export async function getUserbyId(id: string) {
-	try {
-		const numberId = parseInt(id);
-
-		const user = await prisma.user.findUnique({ where: { id: numberId } });
-
-		if (!user) {
-			console.log('User not found');
-			throw new NotFoundError('User not found');
-		}
-
-		return user;
-	} catch (error) {
-		if (error instanceof NotFoundError) {
-			throw error;
-		} else {
-			throw new InternalServerError('Error while fetching user');
-		}
-	}
-}
-
+//? all
 export async function createUser(options: { username: string; email: string; password: string }) {
 	const { username, email, password } = options;
-
 	// if username or email already exist
 	const existingUser = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
 	if (existingUser) {
@@ -95,22 +65,64 @@ export async function loginUser(options: { email: string; password: string }, co
 			accessToken: accessToken,
 		};
 	} catch (error) {
+		if (error instanceof NotFoundError) {
+			throw error;
+		}
+
 		console.error(`Error while trying to login user: `, error);
 	}
 }
 
-export async function updateUser(id: string, options: { username?: string; email?: string; password?: string }, cookieAuth: any) {
+//? protected
+export async function getUsers() {
+	try {
+		return await prisma.user.findMany({ orderBy: { id: 'asc' } });
+	} catch (error) {
+		// console.error(`Error while fetching users: `, error);
+		throw new InternalServerError('Error while fetching users');
+	}
+}
+
+export async function getUserbyId(id: string) {
+	try {
+		const numberId = parseInt(id);
+
+		const user = await prisma.user.findUnique({ where: { id: numberId } });
+
+		if (!user) {
+			console.log('User not found');
+			throw new NotFoundError('User not found');
+		}
+
+		return user;
+	} catch (error) {
+		if (error instanceof NotFoundError) {
+			throw error;
+		} else {
+			throw new InternalServerError('Error while fetching user');
+		}
+	}
+}
+
+export async function updateUser(id: string, options: { username?: string; email?: string; password?: string }, cookieAuth: any, set: any) {
 	try {
 		const { username, email, password } = options;
 
 		const numberId = parseInt(id);
 
-		//? insert logic for using JWT token in the future
-		// only the user who created the acc can update it
-		// console.log(cookieAuth);
+		//____ only the user can update themselves
+		const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
+		const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
+
+		if (!decodedToken || decodedToken.sub !== numberId) {
+			console.log('Unauthorized');
+			console.log(decodedToken, numberId);
+			return (set.status = 'Unauthorized');
+		}
+		// __________
 
 		return await prisma.user.update({
-			where: { id: numberId },
+			where: { id: decodedToken.sub },
 			data: {
 				...(username ? { username } : {}),
 				...(email ? { email } : {}),
@@ -118,10 +130,11 @@ export async function updateUser(id: string, options: { username?: string; email
 			},
 		});
 	} catch (error) {
-		throw new Error('User not found');
+		throw new Error('Error while trying to update user' + error);
 	}
 }
 
+//? admin only
 export async function deleteUser(id: string, cookieAuth: any) {
 	try {
 		const numberId = parseInt(id);
