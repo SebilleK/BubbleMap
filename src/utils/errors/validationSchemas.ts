@@ -19,3 +19,14 @@ const LatitudeSchema = Type.Number({ minimum: -90, maximum: 90 });
 const LongitudeSchema = Type.Number({ minimum: -180, maximum: 180 });
 
 export const typeCheckerGeo = TypeCompiler.Compile(Type.Object({ latitude: LatitudeSchema, longitude: LongitudeSchema }));
+
+//? Review text and rating validation
+const ReviewTextSchema = Type.String({ minLength: 10, maxLength: 1000 });
+const ReviewRatingSchema = Type.Number({ minimum: 1, maximum: 5 });
+
+export const typeCheckerReview = TypeCompiler.Compile(Type.Object({ rating: ReviewRatingSchema, reviewText: ReviewTextSchema }));
+
+// type ReviewTextSchemaType = Static<typeof ReviewTextSchema>;
+
+
+

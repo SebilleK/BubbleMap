@@ -1,4 +1,4 @@
-/* Create db and tables */
+/* Create db and tables — alternative to prisma if needed */
 CREATE DATABASE `bubblemap`;
 
 USE `bubblemap`;

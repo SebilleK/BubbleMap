@@ -1,13 +1,17 @@
 import { Elysia, t } from 'elysia';
 //? import handlers for routes
-import { getReviews } from './handlers';
+import { getReviews, getReviewsbyId, createReview, deleteReview, updateReview } from './handlers';
 
 //? Permission helpers
 import { confirmLogin } from '../../utils/auth/authVerify';
 
-const reviewsRoutes = new Elysia({ prefix: '/reviews' }).get('/', () => {
-	return 'Hello from Reviews. No routes are here currently but maybe in the future there will be =)';
-});
+const reviewsRoutes = new Elysia({ prefix: '/reviews' })
+	.get('/', () => getReviews())
+	.get('/:id', ({ params: { id } }) => getReviewsbyId(id), {
+		params: t.Object({
+			id: t.String(),
+		}),
+	});
 
 const protectedReviewsRoutes = new Elysia({ prefix: '/reviews' }).guard(
 	{
@@ -21,7 +25,27 @@ const protectedReviewsRoutes = new Elysia({ prefix: '/reviews' }).guard(
 		},
 	},
 	app => {
-		return app.get('/', () => getReviews());
+		return app
+			.post('/create/:id/:storeId', ({ params: { rating, reviewText, id, storeId } }) => createReview(rating, reviewText, id, storeId), {
+				params: t.Object({
+					id: t.String(),
+					storeId: t.String(),
+					rating: t.Number(),
+					reviewText: t.String(),
+				}),
+			})
+			.delete('/delete/:id', ({ params: { id }, cookie: { cookieAuth }, set }) => deleteReview(id, cookieAuth, set), {
+				params: t.Object({
+					id: t.String(),
+				}),
+			})
+			.put('/update/:id', ({ params: { id, rating, reviewText }, cookie: { cookieAuth }, set }) => updateReview(id, cookieAuth, set, rating, reviewText), {
+				params: t.Object({
+					id: t.String(),
+					rating: t.Optional(t.Number()),
+					reviewText: t.Optional(t.String()),
+				}),
+			});
 	},
 );
 

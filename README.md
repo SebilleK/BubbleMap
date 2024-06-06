@@ -31,7 +31,11 @@ You can either set up the project with or without Docker. Precise instructions f
 
 Getting Docker to containerize everything successfully and running database migrations with Prisma after can be a challenge. If you plan on using it, read the **Setup with Docker** section carefully and if it doesn't work please refer to the **"Dockerization"** section.
 
-## Setup with Docker
+I recommend jumping over to the Local Setup for the above reasons if you don't need Docker.
+
+## Getting Started — Setup the project
+
+### Setup with Docker
 
 To start, clone this repo:
 
@@ -66,7 +70,7 @@ You should now be able to make requests. Try creating a new user! **(see src/req
 
 Open http://localhost:{API_PORT}/swagger to see API documentation.
 
-## Local Setup for Development WITHOUT Docker (EXAMPLE)
+### Local Setup for Development WITHOUT Docker (EXAMPLE)
 
 1. Database setup
 
@@ -91,7 +95,7 @@ Next we should generate the prisma client and deploy our schema:
 
 ```bash
 bunx prisma generate # Generate a new prisma client
-bunx prisma db push # Deploy our database schema to create the database #!!ALTER this
+bunx prisma db push # Deploy our database schema to create the database
 ```
 
 You can see the schema we're pushing to create our "bubblemap" database on **prisma/schema.prisma**
@@ -109,6 +113,7 @@ bun start
 Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user!
 
 [REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+
 Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
 
 Open http://localhost:{API_PORT}/swagger to see API documentation.
@@ -166,30 +171,56 @@ docker-compose down # stop containers and remove them + their networks and volum
 
 This project uses Prisma for database queries. It uses its own schema definition language to define database relationships, so it's important that that is set up adequately first. **(See prisma/schema.prisma)**.
 
-If needed, equivalent MySQL syntax is provided in **src/database/mysql.sql** to create the "bubblemap" database with the intended schema.
+If needed, equivalent MySQL syntax is provided in **src/database/createdb.sql** to create the "bubblemap" database with the intended schema.
 
 Generate the Prisma Client:
+
+**(Caution: running this in Docker is not supported by earlier versions of Bun!)**
 
 ```bash
 bunx prisma generate
 ```
 
-**(Caution: running this in Docker is not supported by earlier versions of Bun!)**
-
 For initial database deployment:
+
+(Please refer to the steps in the **Quickstart section** for this command to work **if you're using Docker**)
 
 ```bash
 bunx prisma db push
 ```
 
-(Please refer to the steps in the **Quickstart section** for this command to work **if you're using Docker**)
+### Data for Testing
+
+To create dummy data for this database so you can test endpoints, etc.: you can use the provided SQL
+queries in **src/database/queries**. Create the users, stores, and reviews — in this order.
+
+**Creating dummy data with prisma is not yet supported in this project.**
+
+After doing so, to test user only or admin only endpoints login with the right credentials:
+
+Login as an admin:
+
+```bash
+{
+    "email": "admin@test.com",
+    "password": "unsafe_password_admin"
+}
+```
+
+Login as a normal user:
+
+```bash
+{
+    "email": "user1@test.com",
+    "password": "unsafe_user_password1"
+}
+```
 
 ### Database Schema
 
 - I used this platform to design the database schema [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
 
 ![Database Schema](images/databaseschema.svg)
-**(SCHEMA NOT UP TO DATE.)**
 
 ### Why MySQL and not other database management system?
 
@@ -208,15 +239,18 @@ bunx prisma db push
 
 This project uses ElysiaJS. It's a web framework similar to Express but focused on performance, that takes advantage of Bun (and is very commonly used with it). Read more about it on [ElysiaJS' website](https://elysiajs.com/) or in this [blog post](https://dev.to/oggy107/elysia-a-bun-first-web-framework-1kf3).
 
-Elysia Docs
-https://elysiajs.com/integrations/cheat-sheet.html
+**Elysia Docs:**
 
-https://elysiajs.com/essential/context
+- https://elysiajs.com/integrations/cheat-sheet.html
 
-https://elysiajs.com/essential/life-cycle.html
+- https://elysiajs.com/essential/context
+
+- https://elysiajs.com/essential/life-cycle.html
 
 For a good example on how to build a simple REST API with Bun, Elysia and Prisma, check here:
-https://blog.thecodebrew.tech/create-bun-rest-api-with-elysia-and-prisma/
+
+- https://blog.thecodebrew.tech/create-bun-rest-api-with-elysia-and-prisma/
+
 I based my **src/routes** organization on it.
 
 ## Error Handling
@@ -234,9 +268,8 @@ UNKNOWN
 When throwing validation errors Elysia expects 3 arguments, the second one being a schema that represents the validation rules being applied in that case. Those are very simple for this project and defined here in **src/utils/errors/validationSchemas.ts** using [sinclair/typebox](https://github.com/sinclairzx81/typebox).
 
 For more information on how Elysia handles errors check out:
-https://elysiajs.com/life-cycle/on-error
 
-**(TO BE CONTINUED...)**
+- https://elysiajs.com/life-cycle/on-error
 
 ## Authentication + Cookies
 
@@ -319,24 +352,25 @@ Some helper functions to verify if an user is logged in or is an admin for this 
 
 **Relevant Docs:**
 
-https://elysiajs.com/patterns/cookie.html#set
+- https://elysiajs.com/patterns/cookie.html#set
 
-https://elysiajs.com/essential/scope.html#guard
+- https://elysiajs.com/essential/scope.html#guard
 
-https://elysiajs.com/life-cycle/before-handle.html#before-handle
+- https://elysiajs.com/life-cycle/before-handle.html#before-handle
 
 I would like to further mention these resources:
 
-Where I took the idea to group the routes with guard and beforeHandle
-https://www.youtube.com/watch?v=-G7Dzbpd1B4 _(in Brazilian Portuguese)_
+1. Where I took the idea to group the routes with guard and beforeHandle
 
-Very good answer to understand the concept of JWT
-https://stackoverflow.com/a/62095037
+- https://www.youtube.com/watch?v=-G7Dzbpd1B4 _(in Brazilian Portuguese)_
+
+2. Very good answer to understand the concept of JWT
+
+- https://stackoverflow.com/a/62095037
 
 **Notes:**
 
-- The decodeToken function in **authJWT** returns a string, so whenever accessing the values in cookieAuth we need
-  first to convert them.
+- The decodeToken function in **authJWT** returns a string, so whenever accessing the values in cookieAuth we need first to convert them.
 
 ```bash
 # example present in the access of admin only routes
@@ -349,9 +383,42 @@ const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
 The Elysia Swagger plugin is used to generate a Swagger page of documentation for this API.
 When running, check http://localhost:{API_PORT}/swagger
 
+### Endpoints
+
+When marked with a **single asterisk**, it means this endpoint **needs the user to be logged in** to work. **Two asterisks** means the user **needs to be an administrator** for it to work.
+
+An **asterisk and an equals sign** means the user **needs to be logged in and deleting their own created object** (ex: his own review) to be authorized.
+
+For more information on this, refer to the **Authentication + Cookies** section above.
+
+#### Users
+
+- **POST /api/users/register**: Create/Register a new user.
+- **POST /api/users/login**: Login as an existing user.
+- **GET /api/users**: Retrieve all users.\*
+- **GET /api/users/{id}**: Retrieve a specific user by ID.\*
+- **PUT /api/users/{id}**: Update an existing user. \*=
+- **DELETE /api/users/{id}**: Delete a user.\*\*
+
+#### Stores
+
+- **GET /api/stores**: Retrieve all stores.
+- ~~**GET /api/stores/{id}**: Retrieve a specific store by ID~~.
+- **POST /api/stores/create**: Create a new store.\*\*
+- **PUT /api/stores/{id}**: Update an existing store.\*\*
+- **DELETE /api/stores/{id}**: Delete a store.\*\*
+
+#### Reviews
+
+- **GET /api/reviews**: Retrieve all reviews.
+- **GET /api/reviews/{id}**: Retrieve a specific review by ID.
+- **POST /api/reviews/create/{id}/{storeId}**: Create a new review.\*
+- **PUT /api/reviews/{id}**: Update an existing review.\*=
+- **DELETE /api/reviews/{id}**: Delete a review.\*=
+
 ## Features
 
-TBA
+TBA...
 
 ## Libraries/Frameworks currently being used
 

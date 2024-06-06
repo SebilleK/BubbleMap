@@ -22,7 +22,9 @@ const usersRoutes = new Elysia({ prefix: '/users' })
 			email: t.String(),
 			password: t.String(),
 		}),
-	});
+	})
+	// get all users
+	.get('/', () => getUsers());
 
 //? only logged in users can access this
 const protectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
@@ -39,8 +41,6 @@ const protectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
 	app => {
 		return (
 			app
-				// get all users
-				.get('/', () => getUsers())
 				// get user by id
 				.get('/:id', ({ params: { id } }) => getUserbyId(id), {
 					params: t.Object({

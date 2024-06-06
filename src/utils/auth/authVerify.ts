@@ -20,6 +20,7 @@ export async function confirmLogin(set: any, cookieAuth: any) {
 	}
 }
 
+// returns true if user is admin
 export async function confirmAdmin(set: any, cookieAuth: any) {
 	try {
 		const token = cookieAuth.value.accessToken.jwtToken;
@@ -34,6 +35,23 @@ export async function confirmAdmin(set: any, cookieAuth: any) {
 
 		// check if it has the admin property
 		if (!decodedToken || typeof decodedToken.admin !== 'boolean' || !decodedToken.admin) {
+			return false;
+		} else {
+			return true;
+		}
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+}
+
+// returns true if the user making the request is the same as the user in the token
+export async function confirmUser(cookieAuth: any, userId: number) {
+	try {
+		const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
+		const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
+
+		if (!decodedToken || decodedToken.sub !== userId) {
 			return false;
 		} else {
 			return true;

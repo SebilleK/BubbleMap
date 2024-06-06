@@ -8,6 +8,9 @@ import { typeCheckerPassword, typeCheckerEmail } from '../../utils/errors/valida
 //? JWT helpers
 import { generateToken, decodeToken } from '../../utils/auth/authJWT';
 
+//? Auth helpers
+import { confirmUser } from '../../utils/auth/authVerify';
+
 //? all
 export async function createUser(options: { username: string; email: string; password: string }) {
 	const { username, email, password } = options;
@@ -111,18 +114,23 @@ export async function updateUser(id: string, options: { username?: string; email
 		const numberId = parseInt(id);
 
 		//____ only the user can update themselves
-		const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
+		/* const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
 		const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
 
 		if (!decodedToken || decodedToken.sub !== numberId) {
 			console.log('Unauthorized');
 			console.log(decodedToken, numberId);
 			return (set.status = 'Unauthorized');
+		} */
+
+		if ((await confirmUser(cookieAuth, numberId)) === false) {
+			console.log('Unauthorized');
+			return (set.status = 'Unauthorized');
 		}
 		// __________
 
 		return await prisma.user.update({
-			where: { id: decodedToken.sub },
+			where: { id: numberId },
 			data: {
 				...(username ? { username } : {}),
 				...(email ? { email } : {}),
@@ -145,3 +153,4 @@ export async function deleteUser(id: string, cookieAuth: any) {
 		throw new NotFoundError('User not found');
 	}
 }
+ 
