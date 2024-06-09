@@ -33,6 +33,17 @@ Getting Docker to containerize everything successfully and running database migr
 
 I recommend jumping over to the Local Setup for the above reasons if you don't need Docker.
 
+**Quick Reference:**
+
+```bash
+bun i
+bun pm trust --all # if needed, trust dependencies
+bunx prisma generate # Generate a new prisma client
+bunx prisma db push # Deploy our database schema to create the database
+bunx prisma db seed # Seed the database with some dummy data
+bun run dev # Start server
+```
+
 ## Getting Started — Setup the project
 
 ### Setup with Docker
@@ -171,6 +182,8 @@ docker-compose down # stop containers and remove them + their networks and volum
 
 This project uses Prisma for database queries. It uses its own schema definition language to define database relationships, so it's important that that is set up adequately first. **(See prisma/schema.prisma)**.
 
+When needed, the prisma client is always imported from **prisma/prisma.ts**.
+
 If needed, equivalent MySQL syntax is provided in **src/database/createdb.sql** to create the "bubblemap" database with the intended schema.
 
 Generate the Prisma Client:
@@ -194,9 +207,33 @@ bunx prisma db push
 To create dummy data for this database so you can test endpoints, etc.: you can use the provided SQL
 queries in **src/database/queries**. Create the users, stores, and reviews — in this order.
 
-**Creating dummy data with prisma is not yet supported in this project.**
+---
 
-After doing so, to test user only or admin only endpoints login with the right credentials:
+It is also possible to use a seed command to create dummy data using Prisma! This will be equivalent as doing the above.
+
+Simply run this after database deployment:
+
+```bash
+bunx prisma db seed
+```
+
+The above command will execute the script present in **src/database/scripts/seed.ts**.
+
+**Important note:**
+
+Bun has some compatibility issues with Prisma, so the way we can seed the database (as exemplified in the Prisma docs for this) is a bit limited. For now, this uses the workaround mentioned here:
+
+"Bun: Prisma fails silently when seeding with bun with top level async function"
+
+- https://github.com/prisma/prisma/issues/21324#issuecomment-1751945478
+
+Prisma docs on seeding:
+
+- https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding#example-seed-scripts
+
+---
+
+After doing so, to test user only or admin only endpoints you can login with the right credentials:
 
 Login as an admin:
 
@@ -403,7 +440,7 @@ For more information on this, refer to the **Authentication + Cookies** section 
 #### Stores
 
 - **GET /api/stores**: Retrieve all stores.
-- ~~**GET /api/stores/{id}**: Retrieve a specific store by ID~~.
+- **GET /api/stores/{id}**: Retrieve a specific store by ID.
 - **POST /api/stores/create**: Create a new store.\*\*
 - **PUT /api/stores/{id}**: Update an existing store.\*\*
 - **DELETE /api/stores/{id}**: Delete a store.\*\*
@@ -415,6 +452,25 @@ For more information on this, refer to the **Authentication + Cookies** section 
 - **POST /api/reviews/create/{id}/{storeId}**: Create a new review.\*
 - **PUT /api/reviews/{id}**: Update an existing review.\*=
 - **DELETE /api/reviews/{id}**: Delete a review.\*=
+
+## Testing
+
+Native Bun testing is used for testing, with Elysia's "handle" method.
+
+Relevant Docs:
+
+- https://elysiajs.com/patterns/unit-test.html#unit-test
+
+- https://bun.sh/docs/cli/test
+
+After making sure you have a working database (and it is running), run the app.
+Then, to test all endpoints, run:
+
+```bash
+bun test
+```
+
+**Tests are currently being implemented.**
 
 ## Features
 

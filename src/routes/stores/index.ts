@@ -1,11 +1,17 @@
 import { Elysia, t } from 'elysia';
 //? import handlers for routes
-import { getStores, createStore, deleteStore, updateStore } from './handlers';
+import { getStores, getStorebyId, createStore, deleteStore, updateStore } from './handlers';
 
 //? Permission helpers
 import { confirmLogin, confirmAdmin } from '../../utils/auth/authVerify';
 
-const storesRoutes = new Elysia({ prefix: '/stores' }).get('/', () => getStores());
+const storesRoutes = new Elysia({ prefix: '/stores' })
+	.get('/', () => getStores())
+	.get('/:id', ({ params: { id } }) => getStorebyId(id), {
+		params: t.Object({
+			id: t.String(),
+		}),
+	});
 
 const protectedStoresRoutes = new Elysia({ prefix: '/stores' }).get('/protected', () => {
 	return 'Hello from Protected Stores. No routes are here currently but maybe in the future there will be =)';

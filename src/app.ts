@@ -43,6 +43,8 @@ app
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
 	});
 
+
+export default app;
 //! NOTES
 /* FOR CUSTOM ERRORS & customization: SEE ELYSIA ERROR CODES
 	!!Needed handler for custom errors

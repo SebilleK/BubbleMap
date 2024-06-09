@@ -14,6 +14,23 @@ export async function getStores() {
 	}
 }
 
+export async function getStorebyId(id: string) {
+	try {
+		const numberId = parseInt(id);
+
+		const store = await prisma.store.findUnique({ where: { id: numberId } });
+
+		if (!store) {
+			console.log('Store not found');
+			throw new NotFoundError('Store not found');
+		}
+
+		return store;
+	} catch (error) {
+		throw new InternalServerError('Error while fetching store');
+	}
+}
+
 //? protected
 
 //? admin only

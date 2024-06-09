@@ -7,6 +7,10 @@ import { verifyToken, decodeToken } from './authJWT';
 // returns true if user is logged in
 export async function confirmLogin(set: any, cookieAuth: any) {
 	try {
+		//! fix for type error undefined?
+		if (cookieAuth === undefined || cookieAuth.value === undefined || cookieAuth.value.accessToken === undefined) {
+			return false;
+		}
 		const token = cookieAuth.value.accessToken.jwtToken;
 		const verifiedToken = await verifyToken(token);
 		if (verifiedToken) {
@@ -23,6 +27,10 @@ export async function confirmLogin(set: any, cookieAuth: any) {
 // returns true if user is admin
 export async function confirmAdmin(set: any, cookieAuth: any) {
 	try {
+		//! fix for type error undefined?
+		if (cookieAuth === undefined || cookieAuth.value === undefined || cookieAuth.value.accessToken === undefined) {
+			return false;
+		}
 		const token = cookieAuth.value.accessToken.jwtToken;
 		const verifiedToken = await verifyToken(token);
 		if (!verifiedToken) {

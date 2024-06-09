@@ -5,10 +5,11 @@
 	"scripts": {
 		"dev": "bun --watch src/app.ts ",
 		"start": "bun run src/app.ts",
-		"seed": "bun run src/database/scripts/seed.ts"
+		"test": "bun run src/tests/users.test.ts"
 	},
 	"prisma": {
-		"schema": "prisma/schema.prisma"
+		"schema": "prisma/schema.prisma",
+		"seed": "bun run src/database/scripts/seed.ts"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
