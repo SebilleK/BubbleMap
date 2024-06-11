@@ -8,8 +8,10 @@ import { confirmLogin, confirmAdmin } from '../../utils/auth/authVerify';
 
 //? all users can access this
 const usersRoutes = new Elysia({ prefix: '/users' })
+	// get all users
+	.get('/', () => getUsers())
 	// register a new user
-	.post('/register', ({ body }) => createUser(body), {
+	.post('/register', ({ body, set}) => createUser(body, set), {
 		body: t.Object({
 			username: t.String(),
 			email: t.String(),
@@ -22,9 +24,7 @@ const usersRoutes = new Elysia({ prefix: '/users' })
 			email: t.String(),
 			password: t.String(),
 		}),
-	})
-	// get all users
-	.get('/', () => getUsers());
+	});
 
 //? only logged in users can access this
 const protectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
@@ -99,7 +99,7 @@ const adminProtectedUsersRoutes = new Elysia({ prefix: '/users' }).guard(
 		return (
 			app
 				// delete user by id
-				.delete('/:id', ({ params: { id }, cookie: { cookieAuth } }) => deleteUser(id, cookieAuth), {
+				.delete('/:id', ({ params: { id }, cookie: { cookieAuth } ,set}) => deleteUser(id, cookieAuth, set), {
 					params: t.Object({
 						id: t.String(),
 					}),

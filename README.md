@@ -422,6 +422,8 @@ When running, check http://localhost:{API_PORT}/swagger
 
 ### Endpoints
 
+**(TO BE REPLACED WITH SOME SCHEMA)**
+
 When marked with a **single asterisk**, it means this endpoint **needs the user to be logged in** to work. **Two asterisks** means the user **needs to be an administrator** for it to work.
 
 An **asterisk and an equals sign** means the user **needs to be logged in and deleting their own created object** (ex: his own review) to be authorized.
@@ -470,7 +472,40 @@ Then, to test all endpoints, run:
 bun test
 ```
 
-**Tests are currently being implemented.**
+To run a specific file:
+
+```bash
+bun test ./path/to/file.ts
+# bun test ./src/tests/users.test.ts
+```
+
+When routes are log in or admin protected, the set cookie is sent along with the test request so that it can be used to verify user info for accessing the mentioned routes:
+
+```bash
+# ...
+	const setCookieHeader = responseLogin.headers.get('set-cookie');
+	expect(setCookieHeader).not.toBeNull();
+
+	const response = await app.handle(
+		new Request(`http://${app.server?.hostname}:${app.server?.port}/api/users/2`, {
+			method: 'PUT',
+			headers: {
+				Cookie: setCookieHeader!,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ email: 'user1@test.com' }),
+		}),
+	);
+#...
+```
+
+### Notes
+
+Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for testing section)**, they should all pass!
+
+There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section** ).
+
+![Bun test](images/test.gif)
 
 ## Features
 

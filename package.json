@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "bun --watch src/app.ts ",
 		"start": "bun run src/app.ts",
-		"test": "bun run src/tests/users.test.ts"
+		"test": "bun run src/tests/test.ts"
 	},
 	"prisma": {
 		"schema": "prisma/schema.prisma",

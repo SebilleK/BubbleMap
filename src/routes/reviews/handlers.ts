@@ -38,29 +38,41 @@ export async function getReviewsbyId(id: string) {
 
 //? protected
 
-export async function createReview(rating: number, reviewText: string, id: string, storeId: string) {
+export async function createReview(id: string, storeId: string, body: any, set: any, cookieAuth: any) {
 	try {
 		// rating and reviewText validation
-
-		const reviewData = { rating, reviewText };
+		const reviewData = {
+			rating: body.rating,
+			reviewText: body.reviewText,
+		};
 
 		if (!typeCheckerReview.Check(reviewData)) {
 			console.log('Please enter a valid rating and review text');
 			throw new ValidationError('Please enter a valid rating and review text', typeCheckerReview, reviewData);
 		}
 
-		// insert review in the user
+		const userId = parseInt(id);
+		// confirm user
+		if ((await confirmUser(cookieAuth, userId)) === false) {
+			console.log('Unauthorized');
+			return (set.status = 'Unauthorized');
+		}
 
-		await prisma.review.create({
+		// insert review in the user
+		const newReview = await prisma.review.create({
 			data: {
-				userId: parseInt(id),
+				userId: userId,
 				storeId: parseInt(storeId),
-				rating: rating,
-				reviewText: reviewText,
+				rating: reviewData.rating,
+				reviewText: reviewData.reviewText,
 			},
 		});
 
-		return true;
+		set.status = 201;
+
+		// console.log(newReview);
+
+		return newReview;
 	} catch (error) {
 		console.error(`Error while creating review: `, error);
 		throw new InternalServerError('Error while creating review');
@@ -95,7 +107,11 @@ export async function deleteReview(id: string, cookieAuth: any, set: any) {
 			return (set.status = 'Unauthorized');
 		}
 
-		return await prisma.review.delete({ where: { id: numberId } });
+		const deletedReview = await prisma.review.delete({ where: { id: numberId } });
+
+		set.status = 204;
+
+		return deletedReview;
 	} catch (error) {
 		console.error(`Error while deleting review: `, error);
 		throw new NotFoundError('Error while deleting review');

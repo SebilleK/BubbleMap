@@ -35,9 +35,9 @@ export async function getStorebyId(id: string) {
 
 //? admin only
 
-export async function createStore(body: any) {
+export async function createStore(body: any, set: any) {
 	const { name, description, address, latitude, longitude } = body;
-	console.log(body);
+	// console.log(body);
 
 	const existingStore = await prisma.store.findFirst({ where: { OR: [{ name }, { address }] } });
 	if (existingStore) {
@@ -51,17 +51,21 @@ export async function createStore(body: any) {
 	}
 
 	try {
-		return await prisma.store.create({ data: { name, description, address, latitude, longitude } });
+		const store = await prisma.store.create({ data: { name, description, address, latitude, longitude } });
+		set.status = 201;
+		return store;
 	} catch (error) {
 		throw new InternalServerError('Error while trying to create a new store. ' + error);
 	}
 }
 
-export async function deleteStore(id: string) {
+export async function deleteStore(id: string, set: any) {
 	try {
 		const numberId = parseInt(id);
 
-		return await prisma.store.delete({ where: { id: numberId } });
+		const deletedStore = await prisma.store.delete({ where: { id: numberId } });
+		set.status = 204;
+		return deletedStore;
 	} catch (error) {
 		console.error(`Error while trying to delete store: `, error);
 		throw new NotFoundError('Error while trying to delete store. ' + error);

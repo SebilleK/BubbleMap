@@ -12,7 +12,7 @@ import { generateToken, decodeToken } from '../../utils/auth/authJWT';
 import { confirmUser } from '../../utils/auth/authVerify';
 
 //? all
-export async function createUser(options: { username: string; email: string; password: string }) {
+export async function createUser(options: { username: string; email: string; password: string }, set: any) {
 	const { username, email, password } = options;
 	// if username or email already exist
 	const existingUser = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
@@ -31,7 +31,9 @@ export async function createUser(options: { username: string; email: string; pas
 	const hashedPassword = await hashValue(password);
 
 	try {
-		return await prisma.user.create({ data: { username, email, password: hashedPassword } });
+		const user = await prisma.user.create({ data: { username, email, password: hashedPassword } });
+		set.status = 201;
+		return user;
 	} catch (error) {
 		throw new InternalServerError('Error while trying to register user. ');
 	}
@@ -143,14 +145,15 @@ export async function updateUser(id: string, options: { username?: string; email
 }
 
 //? admin only
-export async function deleteUser(id: string, cookieAuth: any) {
+export async function deleteUser(id: string, cookieAuth: any, set: any) {
 	try {
 		const numberId = parseInt(id);
 
-		return await prisma.user.delete({ where: { id: numberId } });
+		const deletedUser = await prisma.user.delete({ where: { id: numberId } });
+		set.status = 204;
+		return deletedUser;
 	} catch (error) {
 		console.error(`Error while trying to delete user: `, error);
 		throw new NotFoundError('User not found');
 	}
 }
- 

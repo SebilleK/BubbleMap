@@ -29,7 +29,7 @@ const adminProtectedStoresRoutes = new Elysia({ prefix: '/stores' }).guard(
 	},
 	app => {
 		return app
-			.post('/create', ({ body }) => createStore(body), {
+			.post('/create', ({ body, set }) => createStore(body, set), {
 				body: t.Object({
 					name: t.String(),
 					description: t.Optional(t.String()),
@@ -38,7 +38,7 @@ const adminProtectedStoresRoutes = new Elysia({ prefix: '/stores' }).guard(
 					longitude: t.Number(),
 				}),
 			})
-			.delete('/:id', ({ params: { id } }) => deleteStore(id), {
+			.delete('/:id', ({ params: { id }, set }) => deleteStore(id, set), {
 				params: t.Object({
 					id: t.String(),
 				}),

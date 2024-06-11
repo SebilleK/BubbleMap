@@ -26,10 +26,8 @@ const protectedReviewsRoutes = new Elysia({ prefix: '/reviews' }).guard(
 	},
 	app => {
 		return app
-			.post('/create/:id/:storeId', ({ params: { rating, reviewText, id, storeId } }) => createReview(rating, reviewText, id, storeId), {
-				params: t.Object({
-					id: t.String(),
-					storeId: t.String(),
+			.post('/create/:id/:storeId', ({ params: { id, storeId }, body, set, cookie: { cookieAuth } }) => createReview(id, storeId, body, set, cookieAuth), {
+				body: t.Object({
 					rating: t.Number(),
 					reviewText: t.String(),
 				}),
