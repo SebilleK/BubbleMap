@@ -29,9 +29,9 @@ This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) i
 
 You can either set up the project with or without Docker. Precise instructions for both can be found below.
 
-Getting Docker to containerize everything successfully and running database migrations with Prisma after can be a challenge. If you plan on using it, read the **Setup with Docker** section carefully and if it doesn't work please refer to the **"Dockerization"** section.
+Getting Docker to containerize everything successfully and running database migrations with Prisma after can be a challenge. If you plan on using it, read the **Setup with Docker** section carefully and if it doesn't work please refer to the **Dockerization** section.
 
-I recommend jumping over to the Local Setup for the above reasons if you don't need Docker.
+I recommend jumping over to the **Setup without Docker** section for the above reasons if you don't need Docker.
 
 **Quick Reference:**
 
@@ -54,7 +54,7 @@ To start, clone this repo:
 git clone https://github.com/SebilleK/BubbleMap.git
 ```
 
-and make sure to have a valid .env file. For a better look at its specifications please refer to **src/env/index.ts.**.
+and make sure to have a valid .env file. For a better look at its needed specifications please refer to **src/env/index.ts**. You also have **.example-env** in the **src/** directory to see how it should look like.
 
 1. Docker | Build images and start the containers:
 
@@ -63,7 +63,7 @@ docker-compose build
 docker-compose up
 ```
 
-2. Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important, temporary fix)
+2. Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important fix!)
 
 It's important to do this because the Prisma CLI runs on your host machine, not within docker, and the host machine would not recognize "mysql" as a valid host.
 
@@ -75,32 +75,36 @@ bunx prisma db push
 
 4. Open http://localhost:{API_PORT}/users
 
-You should now be able to make requests. Try creating a new user! **(see src/requests)**.
+You should now be able to make requests. Try creating a new user! **(see src/requests)**. [REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
-[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+Please refer as well to the **Database > Data for Testing** section to seed the database with some dummy data.
 
 Open http://localhost:{API_PORT}/swagger to see API documentation.
 
-### Local Setup for Development WITHOUT Docker (EXAMPLE)
+### Setup without Docker (EXAMPLE)
 
 1. Database setup
 
-After **cloning the repo** and making sure to have a **valid .env** file, you can use any tools to set up and manage the database.
+Start by **cloning the repo**:
 
-For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection.
+```bash
+git clone https://github.com/SebilleK/BubbleMap.git
+```
 
-Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) works just fine too.
+Then make sure to have a **valid .env** file. For a better look at the needed environment variables please refer to **src/env/index.ts**. You also have **.example-env** in the **src/** directory to see how it should look like.
+
+After that, you can use any tools to set up and manage the database.
+
+For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection. Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) works just fine too.
 
 After making sure you have a valid database setup, proceed.
 
-2. Install all needed dependencies
+2. Install all needed dependencies + Prisma setup
 
 ```bash
 bun i
 bun pm trust --all # if needed, trust all the dependencies to install them
 ```
-
-Check again your .env file is correct, the host should be: **DB_HOST=127.0.0.1**.
 
 Next we should generate the prisma client and deploy our schema:
 
@@ -111,9 +115,11 @@ bunx prisma db push # Deploy our database schema to create the database
 
 You can see the schema we're pushing to create our "bubblemap" database on **prisma/schema.prisma**
 
-Refresh your VSCode extension if you're using it, so you can see the database was just created.
+If you're using the suggested VSCode extension, refresh it. Then you should be able to see the database that was just created.
 
-Then, start up the app in development (with --watch) or normal mode:
+3. Start the app
+
+Finally, start up the app in development (with --watch) or normal mode:
 
 ```bash
 bun run dev # server restarts on code changes
@@ -121,11 +127,9 @@ bun run dev # server restarts on code changes
 bun start
 ```
 
-Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user!
+Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user! [REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
 
-[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
-
-Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
+Please refer as well to the **Database > Data for Testing** section to seed the database with some dummy data.
 
 Open http://localhost:{API_PORT}/swagger to see API documentation.
 
@@ -196,7 +200,7 @@ bunx prisma generate
 
 For initial database deployment:
 
-(Please refer to the steps in the **Quickstart section** for this command to work **if you're using Docker**)
+(Please refer to the steps in the **Quickstart** section for this command to work **if you're using Docker**)
 
 ```bash
 bunx prisma db push
@@ -204,10 +208,7 @@ bunx prisma db push
 
 ### Data for Testing
 
-To create dummy data for this database so you can test endpoints, etc.: you can use the provided SQL
-queries in **src/database/queries**. Create the users, stores, and reviews — in this order.
-
----
+To create dummy data for this database so you can test endpoints, etc.: you can use the provided MySQL queries in **src/database/queries**. Create the users, stores, and reviews — in this order.
 
 It is also possible to use a seed command to create dummy data using Prisma! This will be equivalent as doing the above.
 
@@ -217,11 +218,29 @@ Simply run this after database deployment:
 bunx prisma db seed
 ```
 
-The above command will execute the script present in **src/database/scripts/seed.ts**.
+The above command will execute the script present in **src/database/scripts/seed.ts**. After doing so, to test user only or admin only endpoints you can login with the right credentials:
+
+**Login as an admin:**
+
+```bash
+{
+    "email": "admin@test.com",
+    "password": "unsafe_password_admin"
+}
+```
+
+**Login as a normal user:**
+
+```bash
+{
+    "email": "user1@test.com",
+    "password": "unsafe_user_password1"
+}
+```
 
 **Important note:**
 
-Bun has some compatibility issues with Prisma, so the way we can seed the database (as exemplified in the Prisma docs for this) is a bit limited. For now, this uses the workaround mentioned here:
+Bun has some known compatibility issues with Prisma, so the way we can seed the database is a bit limited (in other words, the way presented in the official Prisma docs doesn't work). For now, this uses the workaround mentioned here:
 
 "Bun: Prisma fails silently when seeding with bun with top level async function"
 
@@ -231,33 +250,11 @@ Prisma docs on seeding:
 
 - https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding#example-seed-scripts
 
----
-
-After doing so, to test user only or admin only endpoints you can login with the right credentials:
-
-Login as an admin:
-
-```bash
-{
-    "email": "admin@test.com",
-    "password": "unsafe_password_admin"
-}
-```
-
-Login as a normal user:
-
-```bash
-{
-    "email": "user1@test.com",
-    "password": "unsafe_user_password1"
-}
-```
-
 ### Database Schema
 
-- I used this platform to design the database schema [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
-
 ![Database Schema](images/databaseschema.svg)
+
+- I used this platform to design the following database schema: [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
 
 ### Why MySQL and not other database management system?
 
@@ -269,8 +266,10 @@ Login as a normal user:
   2. It can handle considerable scalability and growing complexity and strikes a good balances between features/performance;
   3. The most particular type of data stored are coordinates, and their usage for the implemented functionality in this project is relatively simple, so there is no need for advanced geospacial features (PostgreSQL with PostGIS);
 
-- **Note on the data type used to store coordinates**
+- **Note on the data type used to store coordinates:**
   https://stackoverflow.com/questions/1196415/what-datatype-to-use-when-storing-latitude-and-longitude-data-in-sql-databases
+
+---
 
 ## ElysiaJS
 
@@ -308,17 +307,33 @@ For more information on how Elysia handles errors check out:
 
 - https://elysiajs.com/life-cycle/on-error
 
+I used the **"set"** property on Response to set the HTTP status on the route handlers and beforeHandle(s). (This includes error status like 401).
+
+- https://elysiajs.com/essential/context
+
+Example on the beforeHandle of a login-protected route:
+
+```bash
+beforeHandle: async ({ set, cookie: { cookieAuth } }) => {
+# AUTH Logic: check if token is valid (user logged in)
+# console.log(cookieAuth);
+	if ((await confirmLogin(set, cookieAuth)) === false) {
+		return (set.status = 'Unauthorized');
+	}
+}
+```
+
+This would return a 401 Unauthorized response if the user is not logged in and tries to access the route.
+
 ## Authentication + Cookies
 
 I implemented simple JWT-based authentication for 2 levels: user and admin. For having user privileges you need to be logged in, and for having admin privileges you need to be an admin.
 
 ### Generating JWT
 
-I used the jsonwebtoken library to generate, verify and decode JWT.
-**src/utils/auth/authJWT.ts**
+I used the jsonwebtoken library to generate, verify and decode JWT. All the utilities for this were defined in **src/utils/auth/authJWT.ts**
 
-In the login route handler I generate a JWT for the user and store that into a cookie:
-**src/routes/users/handlers.ts**
+In the login route handler (**loginUser** function present in **src/routes/users/handlers.ts**) I generate a JWT for the user and store that into a cookie:
 
 ```bash
 # (...)
@@ -364,8 +379,9 @@ All the protected routes that require user authentication (or admin privileges) 
 # (...)
 ```
 
-Cookie definition (you can extract the cookie property value, as shown above, whenever you need it in the routes):
-**src/app.ts**
+It is also used on the beforeHandle(s) of grouped routes. **More info** on that below.
+
+Cookie definition in **src/app.ts**:
 
 ```bash
 import cookie from '@elysiajs/cookie';
@@ -379,11 +395,13 @@ app
 
 ```
 
-### More info
+The cookie property value can be extracted, as shown above, whenever you need it in the routes.
 
-I grouped all routes by type (users, stores, reviews) inside the routes folder, and within each index file (for each type) you can find them further divided by privileges needed to access them (none, being logged in, being an admin).
+### More info: Route Grouping
 
-These routes are exported to the main **app.ts** file. Each privilege group uses Elysia's guard and beforeHandle to apply the necessary auth verification to all this group's routes.
+I grouped all routes by type (users, stores, reviews) inside the routes folder, and within each index file (for each type) you can find them further **divided by privileges** needed to access them (none, being logged in, being an admin).
+
+These routes are exported to the main **app.ts** file. Each privilege group uses **Elysia's guard and beforeHandle** to apply the necessary auth verification to all this group's routes.
 
 Some helper functions to verify if an user is logged in or is an admin for this purpose (and to declutter the beforeHandle in the indexes too) can be found in **src/utils/auth/authVerify.ts**.
 
@@ -397,7 +415,7 @@ Some helper functions to verify if an user is logged in or is an admin for this 
 
 I would like to further mention these resources:
 
-1. Where I took the idea to group the routes with guard and beforeHandle
+1. Where I took the idea to group the routes with guard and beforeHandle from
 
 - https://www.youtube.com/watch?v=-G7Dzbpd1B4 _(in Brazilian Portuguese)_
 
@@ -407,7 +425,7 @@ I would like to further mention these resources:
 
 **Notes:**
 
-- The decodeToken function in **authJWT** returns a string, so whenever accessing the values in cookieAuth we need first to convert them.
+- The decodeToken function in **authJWT.ts** returns a string, so whenever accessing the values in cookieAuth we need first to convert them.
 
 ```bash
 # example present in the access of admin only routes
@@ -415,49 +433,22 @@ const decodedTokenString = decodeToken(cookieAuth.value.accessToken.jwtToken);
 const decodedToken = decodedTokenString ? JSON.parse(decodedTokenString) : null;
 ```
 
-## API docs
+## API Docs
 
 The Elysia Swagger plugin is used to generate a Swagger page of documentation for this API.
-When running, check http://localhost:{API_PORT}/swagger
+When running, check http://localhost:{API_PORT}/swagger to see a full list of the API endpoints, where you can test them interactively as well.
 
 ### Endpoints
 
-**(TO BE REPLACED WITH SOME SCHEMA)**
+Alternatively, take a look at this schema portraying all the endpoints, what they do and the permissions needed to use them:
 
-When marked with a **single asterisk**, it means this endpoint **needs the user to be logged in** to work. **Two asterisks** means the user **needs to be an administrator** for it to work.
+![Endpoints Schema](images/endpoints.drawio.svg)
 
-An **asterisk and an equals sign** means the user **needs to be logged in and deleting their own created object** (ex: his own review) to be authorized.
-
-For more information on this, refer to the **Authentication + Cookies** section above.
-
-#### Users
-
-- **POST /api/users/register**: Create/Register a new user.
-- **POST /api/users/login**: Login as an existing user.
-- **GET /api/users**: Retrieve all users.\*
-- **GET /api/users/{id}**: Retrieve a specific user by ID.\*
-- **PUT /api/users/{id}**: Update an existing user. \*=
-- **DELETE /api/users/{id}**: Delete a user.\*\*
-
-#### Stores
-
-- **GET /api/stores**: Retrieve all stores.
-- **GET /api/stores/{id}**: Retrieve a specific store by ID.
-- **POST /api/stores/create**: Create a new store.\*\*
-- **PUT /api/stores/{id}**: Update an existing store.\*\*
-- **DELETE /api/stores/{id}**: Delete a store.\*\*
-
-#### Reviews
-
-- **GET /api/reviews**: Retrieve all reviews.
-- **GET /api/reviews/{id}**: Retrieve a specific review by ID.
-- **POST /api/reviews/create/{id}/{storeId}**: Create a new review.\*
-- **PUT /api/reviews/{id}**: Update an existing review.\*=
-- **DELETE /api/reviews/{id}**: Delete a review.\*=
+Made with [draw.io](https://app.diagrams.net/)
 
 ## Testing
 
-Native Bun testing is used for testing, with Elysia's "handle" method.
+Native Bun testing is used for testing, with Elysia's **"handle"** method.
 
 Relevant Docs:
 
@@ -465,7 +456,7 @@ Relevant Docs:
 
 - https://bun.sh/docs/cli/test
 
-After making sure you have a working database (and it is running), run the app.
+After making sure you have a working, seeded database (and it is running), run the app.
 Then, to test all endpoints, run:
 
 ```bash
@@ -479,10 +470,10 @@ bun test ./path/to/file.ts
 # bun test ./src/tests/users.test.ts
 ```
 
-When routes are log in or admin protected, the set cookie is sent along with the test request so that it can be used to verify user info for accessing the mentioned routes:
+When routes are login or admin-protected, the set cookie is sent along with the test request so that it can be used to verify user info for accessing the mentioned routes:
 
 ```bash
-# ...
+# (...)
 	const setCookieHeader = responseLogin.headers.get('set-cookie');
 	expect(setCookieHeader).not.toBeNull();
 
@@ -496,14 +487,14 @@ When routes are log in or admin protected, the set cookie is sent along with the
 			body: JSON.stringify({ email: 'user1@test.com' }),
 		}),
 	);
-#...
+# (...)
 ```
 
 ### Notes
 
-Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for testing section)**, they should all pass!
+Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for Testing section)**, they should all pass!
 
-There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section** ).
+There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section**).
 
 ![Bun test](images/test.gif)
 
@@ -513,7 +504,7 @@ TBA...
 
 ## Libraries/Frameworks currently being used
 
-- Elysia
+- Elysia (+ some plugins)
 - Prisma
 - zod
 - dotenv
