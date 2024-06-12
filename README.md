@@ -444,7 +444,7 @@ Alternatively, take a look at this schema portraying all the endpoints, what the
 
 ![Endpoints Schema](images/endpoints.drawio.svg)
 
-Made with [draw.io](https://app.diagrams.net/)
+[Click here to open](https://raw.githubusercontent.com/SebilleK/BubbleMap/d85c5ce4cd4451bb8b2a03712cb0b0da6a9c0421/images/endpoints.drawio.svg). Made with [draw.io](https://app.diagrams.net/)
 
 ## Testing
 
