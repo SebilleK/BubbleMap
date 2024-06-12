@@ -1,0 +1,21 @@
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DB_NAME=bubblemap
+DB_PASS=
+DB_TYPE=
+DB_USER=
+DB_HOST= # mysql # localhost # 127.0.0.1  #! for docker: use mysql
+DB_PORT=
+
+DATABASE_URL=${DB_TYPE}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+MYSQL_ALLOW_EMPTY_PASSWORD=
+NODE_ENV=
+
+API_PORT=
+JWT_SECRET=
+   
