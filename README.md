@@ -1,12 +1,16 @@
 # BubbleMap
 
+![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white) 
+![ElysiaJS](https://img.shields.io/badge/ElysiaJS%20%20-8A2BE2?link=https%3A%2F%2Felysiajs.com%2F)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+
 ## Project Description
 
 A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited, see others' reviews, and save their favorite shops.
 
 ## Info/Disclaimer
 
-This project is in active development and everything described here is subject to change. This presently exists as a personal reference and is not final documentation.
+This project is in active development and everything described here is subject to change. This presently exists as a personal reference and is not final documentation. Currently I'm working on the [frontend](https://github.com/SebilleK/BubbleMap-frontend) for it.
 
 Install dependencies:
 
@@ -444,7 +448,7 @@ Alternatively, take a look at this schema portraying all the endpoints, what the
 
 ![Endpoints Schema](images/endpoints.drawio.svg)
 
-Made with [draw.io](https://app.diagrams.net/)
+[Click here to open](https://raw.githubusercontent.com/SebilleK/BubbleMap/d85c5ce4cd4451bb8b2a03712cb0b0da6a9c0421/images/endpoints.drawio.svg). Made with [draw.io](https://app.diagrams.net/)
 
 ## Testing
 
