@@ -12,6 +12,9 @@ import swagger from '@elysiajs/swagger';
 //? cookies elysia
 import cookie from '@elysiajs/cookie';
 
+//? cors elysia
+import cors from '@elysiajs/cors';
+
 const app = new Elysia();
 
 app
@@ -26,6 +29,7 @@ app
 			},
 		}),
 	)
+	.use(cors())
 	.use(cookie({ secure: true, httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 24 }))
 	.group('/api', app =>
 		app
@@ -42,7 +46,6 @@ app
 	.listen({ port: env.API_PORT }, () => {
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
 	});
-
 
 export default app;
 //! NOTES

@@ -490,6 +490,27 @@ When routes are login or admin-protected, the set cookie is sent along with the 
 # (...)
 ```
 
+## CORS
+
+CORS (Cross-Origin Resource Sharing) was enabled using the official Elysia plugin for it:
+
+[Elysia CORS Plugin](https://elysiajs.com/plugins/cors.html#cors-plugin)
+
+It works as a middleware in **src/app.ts**
+
+```bash
+app
+	# ...
+	.use(cors())
+	# ...
+```
+
+It is by default restricted by the browser for security reasons, but it needs to be enabled in our case for the frontend to be able to make requests (since it is running on a different port than the backend).
+
+You can read more about CORS here:
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+
 ### Notes
 
 Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for Testing section)**, they should all pass!
