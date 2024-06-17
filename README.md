@@ -1,6 +1,6 @@
 # BubbleMap
 
-![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white) 
+![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
 ![ElysiaJS](https://img.shields.io/badge/ElysiaJS%20%20-8A2BE2?link=https%3A%2F%2Felysiajs.com%2F)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 
@@ -500,12 +500,12 @@ CORS (Cross-Origin Resource Sharing) was enabled using the official Elysia plugi
 
 [Elysia CORS Plugin](https://elysiajs.com/plugins/cors.html#cors-plugin)
 
-It works as a middleware in **src/app.ts**
+It works as a middleware. The necessary CORS config (allowedHeaders and methods) can be found in **src/app.ts**
 
 ```bash
 app
 	# ...
-	.use(cors())
+	.use(cors(....))
 	# ...
 ```
 
@@ -514,6 +514,8 @@ It is by default restricted by the browser for security reasons, but it needs to
 You can read more about CORS here:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+
+Both the CORS and Cookie plugins configuration were adjusted according to the needs of the project.
 
 ### Notes
 

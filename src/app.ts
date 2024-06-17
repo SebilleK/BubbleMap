@@ -29,8 +29,15 @@ app
 			},
 		}),
 	)
-	.use(cors())
-	.use(cookie({ secure: true, httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 24 }))
+	.use(
+		cors({
+			credentials: true,
+			origin: true,
+			allowedHeaders: ['Content-Type', 'Authorization'],
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+		}),
+	)
+	.use(cookie({ secure: false, httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 }))
 	.group('/api', app =>
 		app
 			.use(usersRoutes)
