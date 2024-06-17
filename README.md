@@ -494,6 +494,14 @@ When routes are login or admin-protected, the set cookie is sent along with the 
 # (...)
 ```
 
+### Notes
+
+Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for Testing section)**, they should all pass!
+
+There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section**).
+
+![Bun test](images/test.gif)
+
 ## CORS
 
 CORS (Cross-Origin Resource Sharing) was enabled using the official Elysia plugin for it:
@@ -515,15 +523,6 @@ You can read more about CORS here:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 
-Both the CORS and Cookie plugins configuration were adjusted according to the needs of the project.
-
-### Notes
-
-Assuming you're running the tests after you populated the database with dummy data **(see Database > Data for Testing section)**, they should all pass!
-
-There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section**).
-
-![Bun test](images/test.gif)
 
 ## Features
 
