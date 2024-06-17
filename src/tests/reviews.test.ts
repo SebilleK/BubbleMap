@@ -31,6 +31,15 @@ describe('Reviews Endpoints', () => {
 
 			expect(response.status).toBe(200);
 		});
+
+		//? get all reviews by user id
+		it('GET /api/reviews/all/:id is working, returns 200 and an array of reviews', async () => {
+			const response = await app.handle(new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/all/1`));
+
+			expect(response.status).toBe(200);
+			const responseJSON = await response.json();
+			console.log(responseJSON);
+		});
 	});
 
 	//! LOGIN PROTECTED ENDPOINTS
