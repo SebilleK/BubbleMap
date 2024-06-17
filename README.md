@@ -523,7 +523,6 @@ You can read more about CORS here:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 
-
 ## Features
 
 TBA...
