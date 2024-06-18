@@ -136,7 +136,7 @@ export async function deleteReview(id: string, cookieAuth: any, set: any) {
 	}
 }
 
-export async function updateReview(id: string, cookieAuth: any, set: any, rating?: number, reviewText?: string) {
+export async function updateReview(id: string, cookieAuth: any, set: any, body: any) {
 	try {
 		const numberId = parseInt(id);
 		// only the user can update their own review
@@ -147,19 +147,35 @@ export async function updateReview(id: string, cookieAuth: any, set: any, rating
 			throw new NotFoundError('Review not found');
 		}
 
+		const reviewData = {
+			rating: body.rating ? body.rating : review.rating,
+			reviewText: body.reviewText ? body.reviewText : review.reviewText,
+		};
+
+		// validation
+		if (!typeCheckerReview.Check(reviewData)) {
+			console.log('Please enter a valid rating and review text');
+			throw new ValidationError('Please enter a valid rating and review text', typeCheckerReview, body);
+		}
+
 		if ((await confirmUser(cookieAuth, review.userId)) === false) {
 			console.log('Unauthorized');
 			return (set.status = 'Unauthorized');
 		}
 		/* ___ */
-		return await prisma.review.update({
+
+		const updatedReview = await prisma.review.update({
 			where: { id: numberId },
 			data: {
-				...(rating ? { rating: rating } : {}),
-				...(reviewText ? { reviewText: reviewText } : {}),
+				...reviewData,
 			},
 		});
+
+		return updatedReview;
 	} catch (error) {
+		if (error instanceof ValidationError) {
+			throw error;
+		}
 		console.error(`Error while updating review: `, error);
 		throw new InternalServerError('Error while updating review');
 	}

@@ -42,9 +42,11 @@ const protectedReviewsRoutes = new Elysia({ prefix: '/reviews' }).guard(
 					id: t.String(),
 				}),
 			})
-			.put('/update/:id', ({ params: { id, rating, reviewText }, cookie: { cookieAuth }, set }) => updateReview(id, cookieAuth, set, rating, reviewText), {
+			.put('/update/:id', ({ params: { id }, body, cookie: { cookieAuth }, set }) => updateReview(id, cookieAuth, set, body), {
 				params: t.Object({
 					id: t.String(),
+				}),
+				body: t.Object({
 					rating: t.Optional(t.Number()),
 					reviewText: t.Optional(t.String()),
 				}),
