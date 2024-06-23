@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 //? import handlers for routes
-import { getReviews, getReviewsbyId, getAllReviewsbyUserId, createReview, deleteReview, updateReview } from './handlers';
+import { getReviews, getReviewsbyId, getAllReviewsbyUserId, createReview, deleteReview, updateReview, getAllReviewsbyStoreId } from './handlers';
 
 //? Permission helpers
 import { confirmLogin } from '../../utils/auth/authVerify';
@@ -12,7 +12,12 @@ const reviewsRoutes = new Elysia({ prefix: '/reviews' })
 			id: t.String(),
 		}),
 	})
-	.get('/all/:id', ({ params: { id } }) => getAllReviewsbyUserId(id), {
+	.get('/all/user/:id', ({ params: { id } }) => getAllReviewsbyUserId(id), {
+		params: t.Object({
+			id: t.String(),
+		}),
+	})
+	.get('/all/store/:id', ({ params: { id } }) => getAllReviewsbyStoreId(id), {
 		params: t.Object({
 			id: t.String(),
 		}),

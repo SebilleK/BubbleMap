@@ -54,6 +54,24 @@ export async function getAllReviewsbyUserId(id: string) {
 	}
 }
 
+export async function getAllReviewsbyStoreId(id: string) {
+	try {
+		const numberId = parseInt(id);
+
+		const reviews = await prisma.review.findMany({ where: { storeId: numberId } });
+
+		if (!reviews) {
+			console.log('Reviews not found');
+			throw new NotFoundError('Reviews not found');
+		}
+
+		return reviews;
+	} catch (error) {
+		console.error(`Error while fetching reviews: `, error);
+		throw new InternalServerError('Error while fetching reviews');
+	}
+}
+
 //? protected
 
 export async function createReview(id: string, storeId: string, body: any, set: any, cookieAuth: any) {

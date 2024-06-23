@@ -256,6 +256,7 @@ Prisma docs on seeding:
 
 ### Database Schema
 
+**DATABASE SCHEMA IS NOT UP TO DATE. TO UPDATE.**
 ![Database Schema](images/databaseschema.svg)
 
 - I used this platform to design the following database schema: [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
