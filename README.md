@@ -256,7 +256,6 @@ Prisma docs on seeding:
 
 ### Database Schema
 
-**DATABASE SCHEMA IS NOT UP TO DATE. TO UPDATE.**
 ![Database Schema](images/databaseschema.svg)
 
 - I used this platform to design the following database schema: [dbdiagram.io](https://dbdiagram.io/d). You can export your schema to pdf, mysql, etc:..
@@ -444,6 +443,9 @@ The Elysia Swagger plugin is used to generate a Swagger page of documentation fo
 When running, check http://localhost:{API_PORT}/swagger to see a full list of the API endpoints, where you can test them interactively as well.
 
 ### Endpoints
+
+**IMPORTANT:**
+**API SCHEMA IS NOT UP TO DATE. TO UPDATE.**
 
 Alternatively, take a look at this schema portraying all the endpoints, what they do and the permissions needed to use them:
 
