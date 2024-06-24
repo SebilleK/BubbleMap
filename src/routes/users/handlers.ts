@@ -131,6 +131,24 @@ export async function updateUser(id: string, options: { username?: string; email
 		}
 		// __________
 
+		// updating an user should have the same constrains as creating an user
+
+		const existingUser = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
+
+		if (existingUser) {
+			if (existingUser.id !== numberId) {
+				throw new Error('This username or email have already been used by a registered user.');
+			}
+		}
+
+		if (email && !typeCheckerEmail.Check(email)) {
+			throw new ValidationError('Please enter a valid email address', typeCheckerEmail, email);
+		}
+
+		if (password && !typeCheckerPassword.Check(password)) {
+			throw new ValidationError('Your password should have 8 or more characters', typeCheckerPassword, password);
+		}
+
 		return await prisma.user.update({
 			where: { id: numberId },
 			data: {
