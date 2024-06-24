@@ -141,11 +141,11 @@ export async function updateUser(id: string, options: { username?: string; email
 			}
 		}
 
-		if (email && !typeCheckerEmail.Check(email)) {
+		if (options.email && !typeCheckerEmail.Check(options.email)) {
 			throw new ValidationError('Please enter a valid email address', typeCheckerEmail, email);
 		}
 
-		if (password && !typeCheckerPassword.Check(password)) {
+		if (options.password && !typeCheckerPassword.Check(options.password)) {
 			throw new ValidationError('Your password should have 8 or more characters', typeCheckerPassword, password);
 		}
 
@@ -157,8 +157,8 @@ export async function updateUser(id: string, options: { username?: string; email
 				...(password ? { password: await hashValue(password) } : {}),
 			},
 		});
-	} catch (error) {
-		throw new Error('Error while trying to update user' + error);
+	} catch (error: any) {
+		throw new Error(error);
 	}
 }
 
