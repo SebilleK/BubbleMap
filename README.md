@@ -444,14 +444,11 @@ When running, check http://localhost:{API_PORT}/swagger to see a full list of th
 
 ### Endpoints
 
-**IMPORTANT:**
-**API SCHEMA IS NOT UP TO DATE. TO UPDATE.**
-
 Alternatively, take a look at this schema portraying all the endpoints, what they do and the permissions needed to use them:
 
-![Endpoints Schema](images/endpoints.drawio.svg)
+![Endpoints Schema](images/endpoints.drawio.png)
 
-[Click here to open](https://raw.githubusercontent.com/SebilleK/BubbleMap/d85c5ce4cd4451bb8b2a03712cb0b0da6a9c0421/images/endpoints.drawio.svg). Made with [draw.io](https://app.diagrams.net/)
+[Click here to open](https://raw.githubusercontent.com/SebilleK/BubbleMap/d85c5ce4cd4451bb8b2a03712cb0b0da6a9c0421/images/endpoints.drawio.png). Made with [draw.io](https://app.diagrams.net/)
 
 ## Testing
 
