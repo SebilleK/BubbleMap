@@ -10,7 +10,7 @@ services:
     startCommand: 'bun start'
     preDeployCommand: 'bunx prisma generate && bunx prisma db push && bunx prisma db seed'
     region: frankfurt
-    branch: vercel-deploy
+    branch: render-deploy
 
 databases:
   - name: bubblemap
