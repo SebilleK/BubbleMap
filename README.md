@@ -450,6 +450,25 @@ Alternatively, take a look at this schema portraying all the endpoints, what the
 
 Made with [draw.io](https://app.diagrams.net/)
 
+## Logger 
+
+For logging requests the Logixlysia middleware was used:
+
+```bash
+# ... found in app.ts
+.use(
+	logixlysia({
+		config: {
+			customLogFormat: '🦊 Logger: {now} {duration} {method} {pathname} {status} ',
+		},
+	}),
+)
+# ...
+
+```
+
+Check the library out here: [Logixlysia](https://github.com/PunGrumpy/logixlysia)
+
 ## Testing
 
 Native Bun testing is used for testing, with Elysia's **"handle"** method.
@@ -536,3 +555,4 @@ TBA...
 - bcrypt
 - sinclair/typebox
 - jsonwebtoken
+- Logixlysia
