@@ -15,6 +15,9 @@ import cookie from '@elysiajs/cookie';
 //? cors elysia
 import cors from '@elysiajs/cors';
 
+//? logxlisia (plugin)
+import logixlysia from 'logixlysia';
+
 const app = new Elysia();
 
 app
@@ -30,8 +33,16 @@ app
 		}),
 	)
 	.use(
+		logixlysia({
+			config: {
+				ip: true,
+				customLogFormat: '🦊 Logger: {now} {duration} {method} {pathname} {status} ',
+			},
+		}),
+	)
+	.use(
 		cors({
-			credentials: true, 
+			credentials: true,
 			origin: true,
 			allowedHeaders: ['Content-Type', 'Authorization'],
 			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

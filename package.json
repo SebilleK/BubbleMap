@@ -30,6 +30,7 @@
     "dotenv": "^16.4.5",
     "elysia": "^1.0.22",
     "jsonwebtoken": "^9.0.2",
+    "logixlysia": "^3.4.0",
     "prisma": "5.14.0",
     "zod": "^3.23.8"
   },
