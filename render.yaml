@@ -1,0 +1,17 @@
+# This is a basic example Blueprint for a Django web service and
+# the PostgreSQL database it connects to.
+services:
+  - type: web # A Python web service named django-app running on a free instance
+    plan: free
+    name: BubbleMap
+    runtime: node
+    repo: https://github.com/SebilleK/BubbleMap.git
+    buildCommand: 'bun install'
+    startCommand: 'bun start'
+    preDeployCommand: 'bunx prisma generate && bunx prisma db push && bunx prisma db seed'
+    region: frankfurt
+    branch: vercel-deploy
+
+databases:
+  - name: bubblemap
+    plan: free
