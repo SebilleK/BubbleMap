@@ -94,6 +94,13 @@ export async function createReview(id: string, storeId: string, body: any, set: 
 			return (set.status = 'Unauthorized');
 		}
 
+		// check if the user has already reviewed the store
+		const review = await prisma.review.findFirst({ where: { userId: userId, storeId: parseInt(storeId) } });
+		if (review) {
+			console.log('User has already reviewed this store');
+			throw new Error('This store has already been reviewed');
+		}
+
 		// insert review in the user
 		const newReview = await prisma.review.create({
 			data: {
@@ -110,6 +117,9 @@ export async function createReview(id: string, storeId: string, body: any, set: 
 
 		return newReview;
 	} catch (error) {
+		if (error instanceof Error) {
+			throw new Error(error.message);
+		}
 		console.error(`Error while creating review: `, error);
 		throw new InternalServerError('Error while creating review');
 	}
