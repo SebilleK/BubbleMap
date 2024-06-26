@@ -1,5 +1,4 @@
 import Elysia from 'elysia';
-import { env } from './env';
 
 //! import routes
 import { usersRoutes, protectedUsersRoutes, adminProtectedUsersRoutes } from './routes/users';
@@ -61,7 +60,7 @@ app
 			.use(protectedReviewsRoutes)
 			.use(adminProtectedReviewsRoutes),
 	)
-	.listen({ port: env.API_PORT }, () => {
+	.listen({ port: process.env.API_PORT }, () => {
 		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
 	});
 
