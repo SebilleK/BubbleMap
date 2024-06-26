@@ -8,29 +8,6 @@
 
 A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited, see others' reviews, and save their favorite shops.
 
-## Deployment
-
-**WIP**
-
-The backend and database are deployed on Render (free-tier), as such I changed the DB from MySQL to PostgreSQL, as instances of MySQL databases are not offered for free.
-
-The changes needed for this are present in the render-deploy branch (with a render.yaml file for the blueprint and the needed Prisma schema changes).
-
-Sources:
-
-- https://docs.render.com/free
-- https://docs.render.com/infrastructure-as-code
-
-Render natively supports Bun and hosting an ElysiaJS app.
-
-**note: runtime should be set to "Node"**
-**note #2: make sure to set the region as the same if you want to connect 2 instances (a database and a web service) using the provided internal connection**
-
-Sources:
-
-- https://docs.render.com/deploy-elysiajs
-- https://community.render.com/t/internal-db-connection-not-working/12563/2
-
 ## Info/Disclaimer
 
 This project is in active development and everything described here is subject to change. This presently exists as a personal reference and is not final documentation. Currently I'm working on the [frontend](https://github.com/SebilleK/BubbleMap-frontend) for it.
@@ -473,7 +450,7 @@ Alternatively, take a look at this schema portraying all the endpoints, what the
 
 Made with [draw.io](https://app.diagrams.net/)
 
-## Logger
+## Logger 
 
 For logging requests the Logixlysia middleware was used:
 
