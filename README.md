@@ -4,7 +4,7 @@
 ![ElysiaJS](https://img.shields.io/badge/ElysiaJS%20%20-8A2BE2?link=https%3A%2F%2Felysiajs.com%2F)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 
-## Project Description 
+## Project Description
 
 A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited and check out others' reviews.
 
@@ -560,7 +560,7 @@ Assuming you're running the tests after you populated the database with dummy da
 
 There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section**).
 
-![Bun test](images/test.gif)
+![Bun test](images/updated_tests.gif)
 
 ## CORS
 

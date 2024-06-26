@@ -33,8 +33,8 @@ describe('Reviews Endpoints', () => {
 		});
 
 		//? get all reviews by user id
-		it('GET /api/reviews/all/:id is working, returns 200 and an array of reviews', async () => {
-			const response = await app.handle(new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/all/1`));
+		it('GET /api/reviews/:id is working, returns 200 and an array of reviews', async () => {
+			const response = await app.handle(new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/1`));
 
 			expect(response.status).toBe(200);
 			const responseJSON = await response.json();
@@ -81,7 +81,7 @@ describe('Reviews Endpoints', () => {
 			};
 
 			const response = await app.handle(
-				new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/create/2/1`, {
+				new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/create/2/5`, {
 					method: 'POST',
 					headers: {
 						Cookie: setCookieHeader!,
@@ -122,7 +122,7 @@ describe('Reviews Endpoints', () => {
 
 			const reviewToUpdateSearch = await prisma.review.findMany({ where: { storeId: 1, userId: 2 }, orderBy: { id: 'asc' } });
 
-			const reviewToUpdate = reviewToUpdateSearch[1];
+			const reviewToUpdate = reviewToUpdateSearch[0];
 
 			const newReview = {
 				rating: 4,
@@ -162,7 +162,7 @@ describe('Reviews Endpoints', () => {
 			// making sure the review deleted is the one created
 			const reviewToUpdateSearch = await prisma.review.findMany({ where: { storeId: 1, userId: 2 }, orderBy: { id: 'asc' } });
 
-			const reviewToUpdate = reviewToUpdateSearch[1];
+			const reviewToUpdate = reviewToUpdateSearch[0];
 
 			const newReview = {
 				rating: 5,
@@ -202,7 +202,7 @@ describe('Reviews Endpoints', () => {
 			// making sure the review deleted is the one created
 			const reviewToDeleteSearch = await prisma.review.findMany({ where: { storeId: 1, userId: 2 }, orderBy: { id: 'asc' } });
 
-			const reviewToDelete = reviewToDeleteSearch[1];
+			const reviewToDelete = reviewToDeleteSearch[0];
 
 			const response = await app.handle(
 				new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/delete/${reviewToDelete.id}`, {
@@ -215,6 +215,42 @@ describe('Reviews Endpoints', () => {
 			);
 
 			expect(response.status).toBe(401);
+		});
+
+		//? a user cant create a review for a store that has already been reviewed
+		it('A user cant create a review for a store that has already been reviewed', async () => {
+			const responseLogin = await app.handle(
+				new Request(`http://${app.server?.hostname}:${app.server?.port}/api/users/login`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: 'user1@test.com', password: 'unsafe_user_password1' }),
+				}),
+			);
+
+			expect(responseLogin.status).toBe(200);
+
+			// use the cookie
+			const setCookieHeader = responseLogin.headers.get('set-cookie');
+			expect(setCookieHeader).not.toBeNull();
+
+			const newReview = {
+				rating: 3,
+				reviewText: 'good aesthetic and vibes but kinda painfully mid on everything else idk what else to say',
+			};
+
+			// user 2 is trying to create a review for store 2 but store 2 is already reviewed by this user (user1 has id 2 in the db)
+			const response = await app.handle(
+				new Request(`http://${app.server?.hostname}:${app.server?.port}/api/reviews/create/2/2`, {
+					method: 'POST',
+					headers: {
+						Cookie: setCookieHeader!,
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(newReview),
+				}),
+			);
+
+			expect(response.status).toBe(500);
 		});
 
 		//? Delete review
@@ -234,9 +270,9 @@ describe('Reviews Endpoints', () => {
 			expect(setCookieHeader).not.toBeNull();
 
 			// making sure the review deleted is the one created
-			const reviewToDeleteSearch = await prisma.review.findMany({ where: { storeId: 1, userId: 2 }, orderBy: { id: 'asc' } });
+			const reviewToDeleteSearch = await prisma.review.findMany({ where: { storeId: 5, userId: 2 }, orderBy: { id: 'asc' } });
 
-			const reviewToDelete = reviewToDeleteSearch[1];
+			const reviewToDelete = reviewToDeleteSearch[0];
 			// ______
 
 			const response = await app.handle(
