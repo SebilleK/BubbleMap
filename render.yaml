@@ -1,0 +1,18 @@
+# Example render.yaml file for bleprint render deploy....
+
+services:
+  - type: web
+    plan: free
+    name: BubbleMap
+    runtime: node
+    repo: https://github.com/SebilleK/BubbleMap.git
+    buildCommand: 'bun install'
+    startCommand: 'bun start'
+    preDeployCommand: 'bunx prisma generate && bunx prisma db push && bunx prisma db seed'
+    region: frankfurt
+    branch: render-deploy
+
+databases:
+  - name: bubblemap
+    region: frankfurt
+    plan: free
