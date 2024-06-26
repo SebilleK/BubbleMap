@@ -9,7 +9,7 @@ export async function getStores() {
 	try {
 		return await prisma.store.findMany({ orderBy: { id: 'asc' } });
 	} catch (error) {
-		// console.error(`Error while fetching stores: `, error);
+		console.error(`Error while fetching stores: `, error);
 		throw new InternalServerError('Error while fetching stores');
 	}
 }
@@ -27,6 +27,7 @@ export async function getStorebyId(id: string) {
 
 		return store;
 	} catch (error) {
+		console.error(`Error while fetching store: `, error);
 		throw new InternalServerError('Error while fetching store');
 	}
 }
@@ -55,6 +56,7 @@ export async function createStore(body: any, set: any) {
 		set.status = 201;
 		return store;
 	} catch (error) {
+		console.error(`Error while trying to create a new store: `, error);
 		throw new InternalServerError('Error while trying to create a new store. ' + error);
 	}
 }

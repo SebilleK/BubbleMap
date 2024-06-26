@@ -29,6 +29,7 @@ bun start
 
 This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 
+
 ## Quickstart
 
 You can either set up the project with or without Docker. Precise instructions for both can be found below.
