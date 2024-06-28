@@ -1,3 +1,5 @@
+This application was developed as a final project for a Full Stack Webdev course.
+
 # BubbleMap
 
 ![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
@@ -6,11 +8,16 @@
 
 ## Project Description
 
-A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited and check out others' reviews.
+A website that displays a dynamic map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited and check out others' reviews. Users can manage their own reviews (CRUD). Admins are additionally able to create new stores and manage them.
 
-## General Information
+### Frontend
 
-This application was developed as a final project for a Full Stack Webdev course. I'm currently polishing things up and working on the [frontend](https://github.com/SebilleK/BubbleMap-frontend) for it.
+[BubbleMap-frontend](https://github.com/SebilleK/BubbleMap-frontend)
+The Frontend includes usage for most of the API endpoints. Check its specific repo for more information.
+
+![Frontend Homepage](images/frontend-example.gif)
+
+### General Information
 
 Install dependencies:
 
@@ -33,14 +40,15 @@ This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) i
 
 ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
-Live:
+Live on Render:
 
-https://bubblemap.onrender.com/swagger
-https://bubblemap.onrender.com/api/stores
+https://bubblemap.onrender.com/swagger **- API DOCS**
+
+https://bubblemap.onrender.com/api/stores **- GET ALL STORES**
 
 ![Render deploy](images/render.gif)
 
-The backend and database are deployed on Render (free-tier), as such I changed the DB from MySQL to PostgreSQL, as instances of MySQL databases are not offered for free.
+The backend and database are deployed on Render (free-tier), as such **I changed the DB from MySQL to PostgreSQL**, as instances of MySQL databases are not offered for free.
 
 The changes needed for this are present in the **render-deploy** branch (with a render.yaml file for the blueprint and the needed Prisma schema changes. I added the render.yaml file to this branch as well).
 
@@ -53,22 +61,21 @@ Render natively supports Bun and hosting an ElysiaJS app.
 
 Some notes on the render.yaml file:
 
-**Runtime should be set to "Node"**
-
-**The region has to be the same if you want to connect 2 instances (a database and a web service) using the provided internal connection**
+- **Runtime should be set to "Node"**
+- **The region has to be the same if you want to connect 2 instances (a database and a web service) using the provided internal connection**
 
 Sources:
 
 - https://docs.render.com/deploy-elysiajs
 - https://community.render.com/t/internal-db-connection-not-working/12563/2
 
-I couldn't run my pre deploy commands on render, so I used DBeaver to manage locally a connection to the deployed PostgreSQL database and run my needed prisma commands there:
+I couldn't run my pre deploy commands on render due to that being restricted for the free tier, so I used DBeaver to manage locally a connection to the deployed PostgreSQL database and run my needed prisma commands there:
 
 ```bash
-bunx prisma generate && bunx prisma db push
+bunx prisma generate && bunx prisma db push && bunx prisma db seed
 ```
 
-After that, the deployed service works with the deployed database.
+After that, the deployed service works with the deployed database (populated with dummy data).
 
 ## Quickstart
 
