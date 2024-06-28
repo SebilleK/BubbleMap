@@ -12,8 +12,10 @@ A website that displays a dynamic map of all bubble tea stores nearby, allowing 
 
 ### Frontend
 
-[BubbleMap-frontend](https://github.com/SebilleK/BubbleMap-frontend)
-The Frontend includes usage for most of the API endpoints. Check its specific repo for more information.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+
+The Frontend includes usage for most of the API endpoints. Check its specific repo for more information:
+- [BubbleMap-frontend](https://github.com/SebilleK/BubbleMap-frontend)
 
 ![Frontend Homepage](images/frontend-example.gif)
 
