@@ -15,6 +15,7 @@ A website that displays a dynamic map of all bubble tea stores nearby, allowing 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
 The Frontend includes usage for most of the API endpoints. Check its specific repo for more information:
+
 - [BubbleMap-frontend](https://github.com/SebilleK/BubbleMap-frontend)
 
 ![Frontend Homepage](images/frontend-example.gif)
@@ -291,6 +292,12 @@ The above command will execute the script present in **src/database/scripts/seed
     "password": "unsafe_user_password1"
 }
 ```
+
+**For warnings on Foreign key constraints when deleting/updating records:**
+
+Please refer to:
+
+- https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/referential-actions
 
 **Important note:**
 

@@ -40,8 +40,8 @@ model Review {
   storeId    Int      @map("store_id")
   rating     Int
   reviewText String   @map("review_text")
-  user       User     @relation(fields: [userId], references: [id])
-  store      Store    @relation(fields: [storeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   ReviewFilter ReviewFilter[]
 }
 
