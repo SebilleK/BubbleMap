@@ -111,18 +111,18 @@ git clone https://github.com/SebilleK/BubbleMap.git
 
 and make sure to have a valid .env file. For a better look at its needed specifications please refer to **src/env/index.ts**. You also have **.example-env** in the **src/** directory to see how it should look like.
 
-1. Docker | Build images and start the containers:
+**1. Docker | Build images and start the containers:**
 
 ```bash
 docker-compose build
 docker-compose up
 ```
 
-2. Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important fix!)
+**2. Alter your .env** so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important fix!)
 
 It's important to do this because the Prisma CLI runs on your host machine, not within docker, and the host machine would not recognize "mysql" as a valid host.
 
-3. Prisma | Open a new CLI and run:
+**3. Prisma | Open a new CLI and run:**
 
 ```bash
 bunx prisma db push
@@ -138,7 +138,7 @@ Open http://localhost:{API_PORT}/swagger to see API documentation.
 
 ### Setup without Docker (EXAMPLE)
 
-1. Database setup
+**1. Database setup**
 
 Start by **cloning the repo**:
 
@@ -150,11 +150,13 @@ Then make sure to have a **valid .env** file. For a better look at the needed en
 
 After that, you can use any tools to set up and manage the database.
 
-For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection. Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) works just fine too.
+For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection.
 
-After making sure you have a valid database setup, proceed.
+Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) can work too.
 
-2. Install all needed dependencies + Prisma setup
+After using your preferred tools for this and making sure you have a valid database setup, proceed.
+
+**2. Install all needed dependencies + Prisma setup**
 
 ```bash
 bun i
@@ -172,7 +174,7 @@ You can see the schema we're pushing to create our "bubblemap" database on **pri
 
 If you're using the suggested VSCode extension, refresh it. Then you should be able to see the database that was just created.
 
-3. Start the app
+**3. Start the app**
 
 Finally, start up the app in development (with --watch) or normal mode:
 
@@ -182,7 +184,9 @@ bun run dev # server restarts on code changes
 bun start
 ```
 
-Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user! [REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
+Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user!
+
+[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
 
 Please refer as well to the **Database > Data for Testing** section to seed the database with some dummy data.
 
@@ -191,6 +195,8 @@ Open http://localhost:{API_PORT}/swagger to see API documentation.
 ---
 
 ## Dockerization
+
+**Extra section for additional problems if setting up this project using Docker.**
 
 With docker compose:
 
@@ -293,13 +299,17 @@ The above command will execute the script present in **src/database/scripts/seed
 }
 ```
 
+### Extra Notes
+
 **For warnings on Foreign key constraints when deleting/updating records:**
 
 Please refer to:
 
 - https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/referential-actions
 
-**Important note:**
+This project uses _onDelete: Cascade_ to delete Reviews by default if the user who created them is deleted OR if the store they correspond to is deleted.
+
+**Seeding the database (compatibility issues):**
 
 Bun has some known compatibility issues with Prisma, so the way we can seed the database is a bit limited (in other words, the way presented in the official Prisma docs doesn't work). For now, this uses the workaround mentioned here:
 
@@ -599,11 +609,7 @@ You can read more about CORS here:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 
-## Features
-
-TBA...
-
-## Libraries/Frameworks currently being used
+## Libraries/Frameworks
 
 - Elysia (+ some plugins)
 - Prisma
@@ -612,4 +618,3 @@ TBA...
 - bcrypt
 - sinclair/typebox
 - jsonwebtoken
-- Logixlysia
