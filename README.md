@@ -1,3 +1,5 @@
+This application was developed as a final project for a Full Stack Webdev course.
+
 # BubbleMap
 
 ![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
@@ -6,11 +8,19 @@
 
 ## Project Description
 
-A website that displays a map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited, see others' reviews, and save their favorite shops.
+A website that displays a dynamic map of all bubble tea stores nearby, allowing users to log in/register, review stores they have visited and check out others' reviews. Users can manage their own reviews (CRUD). Admins are additionally able to create new stores and manage them.
 
-## Info/Disclaimer
+### Frontend
 
-This project is in active development and everything described here is subject to change. This presently exists as a personal reference and is not final documentation. Currently I'm working on the [frontend](https://github.com/SebilleK/BubbleMap-frontend) for it.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+
+The Frontend includes usage for most of the API endpoints. Check its specific repo for more information:
+
+- [BubbleMap-frontend](https://github.com/SebilleK/BubbleMap-frontend)
+
+![Frontend Homepage](images/frontend-example.gif)
+
+### General Information
 
 Install dependencies:
 
@@ -29,6 +39,46 @@ bun start
 
 This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 
+## Deployment
+
+![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
+
+Live on Render:
+
+https://bubblemap.onrender.com/swagger **- API DOCS**
+
+https://bubblemap.onrender.com/api/stores **- GET ALL STORES**
+
+![Render deploy](images/render.gif)
+
+The backend and database are deployed on Render (free-tier), as such **I changed the DB from MySQL to PostgreSQL**, as instances of MySQL databases are not offered for free.
+
+The changes needed for this are present in the **render-deploy** branch (with a render.yaml file for the blueprint and the needed Prisma schema changes. I added the render.yaml file to this branch as well).
+
+Sources:
+
+- https://docs.render.com/free
+- https://docs.render.com/infrastructure-as-code
+
+Render natively supports Bun and hosting an ElysiaJS app.
+
+Some notes on the render.yaml file:
+
+- **Runtime should be set to "Node"**
+- **The region has to be the same if you want to connect 2 instances (a database and a web service) using the provided internal connection**
+
+Sources:
+
+- https://docs.render.com/deploy-elysiajs
+- https://community.render.com/t/internal-db-connection-not-working/12563/2
+
+I couldn't run my pre deploy commands on render due to that being restricted for the free tier, so I used DBeaver to manage locally a connection to the deployed PostgreSQL database and run my needed prisma commands there:
+
+```bash
+bunx prisma generate && bunx prisma db push && bunx prisma db seed
+```
+
+After that, the deployed service works with the deployed database (populated with dummy data).
 
 ## Quickstart
 
@@ -61,18 +111,18 @@ git clone https://github.com/SebilleK/BubbleMap.git
 
 and make sure to have a valid .env file. For a better look at its needed specifications please refer to **src/env/index.ts**. You also have **.example-env** in the **src/** directory to see how it should look like.
 
-1. Docker | Build images and start the containers:
+**1. Docker | Build images and start the containers:**
 
 ```bash
 docker-compose build
 docker-compose up
 ```
 
-2. Alter your .env so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important fix!)
+**2. Alter your .env** so that DB_HOST is "127.0.0.1" and NOT "mysql". **Docker will use the latter one, while deploying the database with Prisma uses the first one.** (Important fix!)
 
 It's important to do this because the Prisma CLI runs on your host machine, not within docker, and the host machine would not recognize "mysql" as a valid host.
 
-3. Prisma | Open a new CLI and run:
+**3. Prisma | Open a new CLI and run:**
 
 ```bash
 bunx prisma db push
@@ -88,7 +138,7 @@ Open http://localhost:{API_PORT}/swagger to see API documentation.
 
 ### Setup without Docker (EXAMPLE)
 
-1. Database setup
+**1. Database setup**
 
 Start by **cloning the repo**:
 
@@ -100,11 +150,13 @@ Then make sure to have a **valid .env** file. For a better look at the needed en
 
 After that, you can use any tools to set up and manage the database.
 
-For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection. Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) works just fine too.
+For ease of use, I recommend using [XAMPP](https://www.apachefriends.org/) to start up MySQL and the VSCode extension [Database Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc) to manage the connection.
 
-After making sure you have a valid database setup, proceed.
+Alternatively to this extension, [MySQL Workbench](https://www.mysql.com/products/workbench/) can work too.
 
-2. Install all needed dependencies + Prisma setup
+After using your preferred tools for this and making sure you have a valid database setup, proceed.
+
+**2. Install all needed dependencies + Prisma setup**
 
 ```bash
 bun i
@@ -122,7 +174,7 @@ You can see the schema we're pushing to create our "bubblemap" database on **pri
 
 If you're using the suggested VSCode extension, refresh it. Then you should be able to see the database that was just created.
 
-3. Start the app
+**3. Start the app**
 
 Finally, start up the app in development (with --watch) or normal mode:
 
@@ -132,7 +184,9 @@ bun run dev # server restarts on code changes
 bun start
 ```
 
-Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user! [REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
+Open http://localhost:{API_PORT}/api/users — there should not be anything there, so try to create a user!
+
+[REST Client VSCode Extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Go to **requests/create_user.rest** and send a request. Refresh the page and it should be there.
 
 Please refer as well to the **Database > Data for Testing** section to seed the database with some dummy data.
 
@@ -141,6 +195,8 @@ Open http://localhost:{API_PORT}/swagger to see API documentation.
 ---
 
 ## Dockerization
+
+**Extra section for additional problems if setting up this project using Docker.**
 
 With docker compose:
 
@@ -243,7 +299,17 @@ The above command will execute the script present in **src/database/scripts/seed
 }
 ```
 
-**Important note:**
+### Extra Notes
+
+**For warnings on Foreign key constraints when deleting/updating records:**
+
+Please refer to:
+
+- https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/referential-actions
+
+This project uses _onDelete: Cascade_ to delete Reviews by default if the user who created them is deleted OR if the store they correspond to is deleted.
+
+**Seeding the database (compatibility issues):**
 
 Bun has some known compatibility issues with Prisma, so the way we can seed the database is a bit limited (in other words, the way presented in the official Prisma docs doesn't work). For now, this uses the workaround mentioned here:
 
@@ -451,7 +517,7 @@ Alternatively, take a look at this schema portraying all the endpoints, what the
 
 Made with [draw.io](https://app.diagrams.net/)
 
-## Logger 
+## Logger
 
 For logging requests the Logixlysia middleware was used:
 
@@ -520,7 +586,7 @@ Assuming you're running the tests after you populated the database with dummy da
 
 There are tests for every endpoint (note that the stores routes don't have login-only routes and the reviews routes don't have admin-only routes: please refer to the **API docs > Endpoints section**).
 
-![Bun test](images/test.gif)
+![Bun test](images/updated_tests.gif)
 
 ## CORS
 
@@ -543,11 +609,7 @@ You can read more about CORS here:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 
-## Features
-
-TBA...
-
-## Libraries/Frameworks currently being used
+## Libraries/Frameworks
 
 - Elysia (+ some plugins)
 - Prisma
@@ -556,4 +618,3 @@ TBA...
 - bcrypt
 - sinclair/typebox
 - jsonwebtoken
-- Logixlysia
