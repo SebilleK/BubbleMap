@@ -62,7 +62,8 @@ app
 			.use(adminProtectedReviewsRoutes),
 	)
 	.listen({ port: env.API_PORT }, () => {
-		console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}/swagger`);
+		console.log(`🦊 Check API docs at http://${app.server?.hostname}:${app.server?.port}/swagger \n`);
+		console.log(`🦊 Check all stores at http://${app.server?.hostname}:${app.server?.port}/api/stores \n`);
 	});
 
 export default app;
