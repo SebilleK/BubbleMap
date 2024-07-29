@@ -1,4 +1,5 @@
 This application was developed as a final project for a Full Stack Webdev course.
+It received a score of 20 out of 20. 
 
 # BubbleMap
 
