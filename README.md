@@ -44,7 +44,8 @@ This project was created using `bun init` in bun v1.1.9. [Bun](https://bun.sh) i
 
 ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
-Live on Render:
+~~Live on Render:~~
+**NOT UPDATED**
 
 https://bubblemap.onrender.com/swagger **- API DOCS**
 
